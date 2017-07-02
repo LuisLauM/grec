@@ -23,7 +23,7 @@ That function performs 4 steps:
 \item Smoothing of the original data.
 \item Application of sobel filters horizontally (sobelH) and vertically (sobelV).
 \item Extract gradients, using the formula \eqn{sqrt(sobelH^2 + sobelV^2)}.
-\item Removing noise signals using a median filter, from \link{\code{imagine}} package.
+\item Removing noise signals using a median filter, from \code{imagine} package.
 }
 
 In order to improve the extraction of fronts, the package allows users to change the \code{thresholds}

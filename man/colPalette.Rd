@@ -9,7 +9,7 @@
 colPalette
 }
 \description{
-Vector with 2000 colors generated from \code{fields::tim.colors} function.
+Vector with 2000 colors generated from \code{tim.colors} function.
 }
 \references{
 \code{fields} package

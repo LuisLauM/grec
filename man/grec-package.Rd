@@ -11,6 +11,6 @@ It provides algorithms for detection of spatial patterns from oceanographic data
 \author{
 Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 }
-\keyword{detection,}
-\keyword{environmental-data,}
+\keyword{environmental-data}
 \keyword{gradient,}
+\keyword{pattern-detection,}

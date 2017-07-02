@@ -10,6 +10,6 @@ Maintainer: Wencheng Lau-Medrano <luis.laum@gmail.com>
 Description: It provides algorithms for detection of spatial patterns from oceanographic data.
 License: GPL (>= 2)
 LazyData: TRUE
-Depends: R (>= 3.2.0),
-  imagine
+Depends: R (>= 3.2.0)
+Imports: imagine
 RoxygenNote: 6.0.1

@@ -6,12 +6,12 @@
 #' @description It provides algorithms for detection of spatial patterns from oceanographic data.
 #' @aliases grec-package grec
 #' @docType package
-#' @keywords gradient, detection, environmental-data,
+#' @keywords gradient, pattern-detection, environmental-data
 NULL
 
 #' @title Default color palette most using on environmental representations.
 #' @name colPalette
-#' @description Vector with 2000 colors generated from \code{fields::tim.colors} function.
+#' @description Vector with 2000 colors generated from \code{tim.colors} function.
 #' @aliases colPalette
 #' @docType data
 #' @usage colPalette
@@ -31,7 +31,7 @@ NULL
 #' \item Smoothing of the original data.
 #' \item Application of sobel filters horizontally (sobelH) and vertically (sobelV).
 #' \item Extract gradients, using the formula \eqn{sqrt(sobelH^2 + sobelV^2)}.
-#' \item Removing noise signals using a median filter, from \link{\code{imagine}} package.
+#' \item Removing noise signals using a median filter, from \code{imagine} package.
 #' }
 #'
 #' In order to improve the extraction of fronts, the package allows users to change the \code{thresholds}
