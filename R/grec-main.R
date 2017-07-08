@@ -21,6 +21,9 @@ NULL
 
 #' @title Detection of fronts based on gradient recognition
 #'
+#' @description This function takes a environmental map (as a numeric matrix) and allows the user to idenitify
+#' the gradients by using of sobel filters.
+#'
 #' @param envirData Either a list o numerical matrix with environmental info. See Details.
 #' @param thresholds \code{numeric} vector of length 1 or 2 with info of limits of values to consider. See Details.
 #' @param stepByStep \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})

@@ -51,9 +51,9 @@ checkArgs_frontDetect <- function(allArgs){
 
   msg6 <- "'thresholds' must be a numeric vector of length 1 or 2. See help(frontDetect)."
   if(length(thresholds) == 1){
-    thresholds <- c(thresholds, 5*thresholds)
+    allArgs$thresholds <- c(thresholds, 5*thresholds)
   }else if(length(thresholds) == 2){
-    thresholds <- sort(thresholds)
+    allArgs$thresholds <- sort(thresholds)
   }else{
     stop(msg6)
   }

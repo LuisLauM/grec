@@ -17,6 +17,10 @@ or just the final one (\code{FALSE}).}
 \value{
 Depending on \code{stepByStep} argument, it can be a list or a single numeric matrix.
 }
+\description{
+This function takes a environmental map (as a numeric matrix) and allows the user to idenitify
+the gradients by using of sobel filters.
+}
 \details{
 That function performs 4 steps:
 \enumerate{
