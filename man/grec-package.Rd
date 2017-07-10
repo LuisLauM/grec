@@ -4,9 +4,10 @@
 \name{grec-package}
 \alias{grec-package}
 \alias{grec}
-\title{Classification of spatial patterns from environmental data through GRadient RECognition}
+\title{Classification of Spatial Patterns from Environmental Data Through GRadient RECognition}
 \description{
-It provides algorithms for detection of spatial patterns from oceanographic data.
+Provides algorithms for detection of spatial patterns from oceanographic data using image
+processing methods based on Gradient Recognition.
 }
 \author{
 Wencheng Lau-Medrano, \email{luis.laum@gmail.com}

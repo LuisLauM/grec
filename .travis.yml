@@ -1,0 +1,6 @@
+# use c as catch-all language
+language: r
+
+# Build and check package
+script:
+  - R CMD build . --no-build-vignettes --no-manual
