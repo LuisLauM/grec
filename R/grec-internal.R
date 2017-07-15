@@ -109,7 +109,7 @@ frontDetect_internal <- function(envirData, thresholds, stepByStep, control){
   }
 
   # Define sobel kernel values
-  sobelKernel <- control$sobelStrength*c(-1, -2, -1, 0, 0, 0, 1, 2, 1)
+  sobelKernel <- control$sobelStrength*control$kernelValues
 
   # Define sobel kernels
   sobelH <- matrix(data = sobelKernel, nrow = 3, byrow = TRUE)
@@ -164,6 +164,7 @@ extraParams_internal <- function(fx){
     output[[i]] <- switch(fx[i],
                           frontDetect = list(firstSmooth = list(radius = 5,
                                                                 times = 10),
+                                             kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1),
                                              sobelStrength = 10,
                                              clearNoise = list(radius = 5,
                                                                times = 1)),
