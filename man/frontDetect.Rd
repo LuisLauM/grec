@@ -39,7 +39,7 @@ found structures of meso and micro scale.
 
 \code{envirData} could be given as a single numeric matrix containing the values of a
 environmental map. Othersiwe it also can be a list with dimensions 'x', 'y' and 'z' specifying
-the dimensions of the data as folloews: 'x' will be a numeric vector with the values of longitude,
+the dimensions of the data as follows: 'x' will be a numeric vector with the values of longitude,
 'y' will indicate the latitude (numeric vector as well). 'grec' package does not be rigorous in
 the check of the values given for dimensions, so the user must be carefull with them.
 
