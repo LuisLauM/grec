@@ -4,8 +4,8 @@
 # Load example data
 load(system.file("extdata", "exampleSSTData.RData", package = "grec"))
 
-# Apply frontDetect function
-out <- frontDetect(envirData = exampleSSTData, threshold = c(7.5, 500), stepByStep = TRUE)
+# Apply detectFronts function
+out <- detectFronts(x = exampleSSTData, thresholds = c(7.5, 500), intermediate = TRUE, finalSmooth = TRUE)
 
 
 # Make plots -----------------------------------------------------------------------------

@@ -21,14 +21,26 @@ NULL
 #' @references \code{fields} package
 NULL
 
+#' @title Example map of SST from Aqua MODIS
+#' @name exampleSSTData
+#' @description A \code{list} with 3 levels (x, y, z) containing information of an SST map: longitud, latitude and
+#' values (as a \code{matrix}). Info was downloaded from Aqua MODIS, March, 2010.
+#' @aliases exampleSSTData
+#' @docType data
+#' @usage exampleSSTData
+#' @format A \code{list} with 3 levels (x, y, z). \code{x} and \code{y} are numeric vectors, \code{z}
+#' is a numeric \code{matrix}.
+NULL
+
 #' @title Detection of fronts based on gradient recognition
 #'
 #' @description This function takes a environmental map (as a numeric matrix) and allows the user to idenitify
 #' the gradients by using of sobel filters.
 #'
-#' @param envirData Either a list o numerical matrix with environmental info. See 'Details.'
+#' @param x Either a list o numerical matrix with environmental info. See 'Details.'
 #' @param thresholds \code{numeric} vector of length 1 or 2 with info of limits of values to consider. See 'Details'.
-#' @param stepByStep \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
+#' @param finalSmooth \code{logical} indicating whether to apply a smooth to final matrix so as to remove noise.
+#' @param intermediate \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
 #' or just the final one (\code{FALSE}).
 #' @param control A \code{list} of control parameters for filter application See 'Details'.
 #'
@@ -45,10 +57,10 @@ NULL
 #' the range and scale of input matrix; but, as a rule, lower values on \code{threshold} will allow to
 #' found structures of meso and micro scale.
 #'
-#' \code{envirData} could be given as a single numeric matrix containing the values of a
+#' \code{x} could be given as a single numeric matrix containing the values of a
 #' environmental map. Othersiwe it also can be a list with dimensions 'x', 'y' and 'z' specifying
 #' the dimensions of the data as follows: 'x' will be a numeric vector with the values of longitude,
-#' 'y' will indicate the latitude (numeric vector as well). 'grec' package does not be rigorous in
+#' 'y' will indicate the latitude (numeric vector as well). 'grec' package is not rigorous in
 #' the check of the values given for dimensions, so the user must be carefull with them.
 #'
 #' \code{thresholds} could be given as a single value. If so, the second value must be calculated
@@ -71,23 +83,23 @@ NULL
 #' and SST satellite imagery. Journal of Marine Systems, 78(3), 319-326
 #' (\url{http://dx.doi.org/10.1016/j.jmarsys.2008.11.018}).
 #'
-#' @return Depending on \code{stepByStep} argument, it can be a list or a single numeric matrix.
+#' @return Depending on \code{intermediate} argument, it can be a list or a single numeric matrix.
 #' @export
 #'
 #' @examples
 #' load(system.file("extdata", "exampleSSTData.RData", package = "grec"))
-#' out <- frontDetect(envirData = exampleSSTData, threshold = c(10, 500), stepByStep = FALSE)
+#' out <- detectFronts(x = exampleSSTData, threshold = c(10, 500))
 #' image(out, col = colPalette)
-frontDetect <- function(envirData, thresholds, stepByStep = TRUE, control = list()){
+detectFronts <- function(x, thresholds, finalSmooth = FALSE, intermediate = FALSE, control = list()){
   # Check and validation of arguments
-  checkedArgs <- list(envirData = envirData, thresholds = thresholds, stepByStep = stepByStep,
+  checkedArgs <- list(x = x, thresholds = thresholds, finalSmooth = finalSmooth, intermediate = intermediate,
                       control = control)
   checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
 
   # Apply filters
   output <- with(checkedArgs,
-                 frontDetect_internal(envirData = envirData, thresholds = thresholds, stepByStep = stepByStep,
-                                      control = control))
+                 detectFronts_internal(x = x, thresholds = thresholds, finalSmooth = finalSmooth,
+                                      intermediate = intermediate, control = control))
 
   return(output)
 }
@@ -107,7 +119,7 @@ frontDetect <- function(envirData, thresholds, stepByStep = TRUE, control = list
 #' @examples
 #' # For getting all the extra parameters
 #' extraParams()
-extraParams <- function(fx = c("frontDetect")){
+extraParams <- function(fx = c("detectFronts")){
   # Check and validation of arguments
   checkedArgs <- list(fx = fx)
   checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])

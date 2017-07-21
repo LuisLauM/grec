@@ -4,7 +4,7 @@
 \alias{extraParams}
 \title{Gets the extra parameters for \code{grec} functions}
 \usage{
-extraParams(fx = c("frontDetect"))
+extraParams(fx = c("detectFronts"))
 }
 \arguments{
 \item{fx}{\code{character} vector indicating the values that will be returned.}
