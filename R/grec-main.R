@@ -38,7 +38,7 @@ NULL
 #' the gradients by using of sobel filters.
 #'
 #' @param x Either a list o numerical matrix with environmental info. See 'Details.'
-#' @param thresholds \code{numeric} vector of length 1 or 2 with info of limits of values to consider. See 'Details'.
+#' @param qLimits \code{numeric} vector of length 1 or 2 with info of limits of values to consider. See 'Details'.
 #' @param finalSmooth \code{logical} indicating whether to apply a smooth to final matrix so as to remove noise.
 #' @param intermediate \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
 #' or just the final one (\code{FALSE}).
@@ -52,19 +52,16 @@ NULL
 #' \item Removing noise signals using a median filter, from \code{imagine} package.
 #' }
 #'
-#' In order to improve the extraction of fronts, the package allows users to change the \code{thresholds}
-#' values. It controls the structures that will be founded by the algorithm and its values will depend on
-#' the range and scale of input matrix; but, as a rule, lower values on \code{threshold} will allow to
-#' found structures of meso and micro scale.
-#'
 #' \code{x} could be given as a single numeric matrix containing the values of a
 #' environmental map. Othersiwe it also can be a list with dimensions 'x', 'y' and 'z' specifying
 #' the dimensions of the data as follows: 'x' will be a numeric vector with the values of longitude,
 #' 'y' will indicate the latitude (numeric vector as well). 'grec' package is not rigorous in
 #' the check of the values given for dimensions, so the user must be carefull with them.
 #'
-#' \code{thresholds} could be given as a single value. If so, the second value must be calculated
-#' as a 5 times the given value. That argument must be applied after the smoothing (step 1).
+#' \code{qLimits} works after the extraction of grandient matrix. Values of these matrix are vectorized
+#' and the quantiles indicated on \code{qLimits} are taken (that is the reason of the argument name). Then
+#' the values out of the limits are replaced by \code{NA}. \code{qLimits} could be given as a single value.
+#' If so, the second value must be calculated as \code{c(qLimits, qLimits + (1 - qLimits)/2)}.
 #'
 #' The control argument is a list that allows the (advanced) users modify some aspects of filter
 #' application. The parameters of \code{control} are given to functions of \code{\link{imagine}} package.
@@ -72,7 +69,7 @@ NULL
 #' \describe{
 #' \item{\strong{firstSmooth}}{Arguments (\code{radius} and \code{times}) pased to \code{\link{medianFilter}}
 #' function, used for apply the smoothing to the original matrix. It must be given as a named list.}
-#' \item{\strong{sobelStrength}}{Number that multiplies \code{thresholds} vector. It is usefull to highlight
+#' \item{\strong{sobelStrength}}{Number that multiplies \code{qLimits} vector. It is usefull to highlight
 #' the differences.}
 #' \item{\strong{clearNoise}}{Arguments (\code{radius} and \code{times}) pased to \code{\link{medianFilter}}
 #' function, used for apply the median-filter for cleaning noise and getting the output matrix. It must be
@@ -88,17 +85,17 @@ NULL
 #'
 #' @examples
 #' load(system.file("extdata", "exampleSSTData.RData", package = "grec"))
-#' out <- detectFronts(x = exampleSSTData, threshold = c(10, 500))
+#' out <- detectFronts(x = exampleSSTData)
 #' image(out, col = colPalette)
-detectFronts <- function(x, thresholds, finalSmooth = FALSE, intermediate = FALSE, control = list()){
+detectFronts <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
   # Check and validation of arguments
-  checkedArgs <- list(x = x, thresholds = thresholds, finalSmooth = finalSmooth, intermediate = intermediate,
+  checkedArgs <- list(x = x, qLimits = qLimits, finalSmooth = finalSmooth, intermediate = intermediate,
                       control = control)
   checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
 
   # Apply filters
   output <- with(checkedArgs,
-                 detectFronts_internal(x = x, thresholds = thresholds, finalSmooth = finalSmooth,
+                 detectFronts_internal(x = x, qLimits = qLimits, finalSmooth = finalSmooth,
                                       intermediate = intermediate, control = control))
 
   return(output)

@@ -12,7 +12,7 @@ checkArgs <- function(grecArgs, type){
 checkArgs_detectFronts <- function(allArgs){
 
   x <- allArgs$x
-  thresholds <- allArgs$thresholds
+  qLimits <- sort(unique(allArgs$qLimits))
   finalSmooth <- allArgs$finalSmooth
   intermediate <- allArgs$intermediate
   control <- allArgs$control
@@ -46,17 +46,25 @@ checkArgs_detectFronts <- function(allArgs){
     warning(msg4)
   }
 
-  # Check if thresholds is a numeric vector of length 1 or 2
-  msg5 <- "'thresholds' must be a numeric vector."
-  if(!is.numeric(thresholds)){
+  # Check if qLimits is a numeric vector of length 1 or 2
+  msg5 <- "'qLimits' must be a numeric vector with values between 0 and 1."
+  if(!is.numeric(qLimits)){
     stop(msg5)
   }
 
-  msg6 <- "'thresholds' must be a numeric vector of length 1 or 2. See help(detectFronts)."
-  if(length(thresholds) == 1){
-    allArgs$thresholds <- c(thresholds, 5*thresholds)
-  }else if(length(thresholds) == 2){
-    allArgs$thresholds <- sort(thresholds)
+  msg6 <- "'qLimits' must be a numeric vector of length 1 or 2 and values between 0 and 1. See help(detectFronts)."
+  if(any(qLimits < 0 | qLimits > 1)){
+    stop(msg6)
+  }
+
+  if(length(qLimits) == 1){
+    if(isTRUE(all.equal(qLimits, 1))){
+      allArgs$qLimits <- c(qLimits, qLimits)
+    }else{
+      allArgs$qLimits <- c(qLimits, qLimits + (1 - qLimits)/2)
+    }
+  }else if(length(qLimits) == 2){
+    allArgs$qLimits <- sort(qLimits)
   }else{
     stop(msg6)
   }
@@ -94,7 +102,7 @@ checkArgs_extraParams <- function(allArgs){
   return(allArgs)
 }
 
-detectFronts_internal <- function(x, thresholds, finalSmooth, intermediate, control){
+detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control){
 
   # Create empty list for outputs
   if(intermediate){
@@ -137,7 +145,8 @@ detectFronts_internal <- function(x, thresholds, finalSmooth, intermediate, cont
 
   # Calculate gradient
   newSobel <- sqrt(filteredH^2 + filteredV^2)
-  newSobel[newSobel < thresholds[1] | newSobel > thresholds[2]] <- NA
+  qLimits <- quantile(x = as.numeric(newSobel), probs = qLimits, na.rm = TRUE)
+  newSobel[newSobel < qLimits[1] | newSobel > qLimits[2]] <- NA
 
   if(intermediate){
     output[[5]] <- list(x = x$x,
