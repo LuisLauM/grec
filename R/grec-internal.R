@@ -171,7 +171,7 @@ detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control
   }else{
     output <- list(x = x$x,
                    y = x$y,
-                   z = output[[length(output)]])
+                   z = newSobel)
   }
 
   return(output)

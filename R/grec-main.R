@@ -1,5 +1,6 @@
 #' @title Classification of Spatial Patterns from Environmental Data Through GRadient RECognition
 #' @import imagine
+#' @import raster
 #' @importFrom utils modifyList
 #'
 #' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
@@ -87,7 +88,7 @@ NULL
 #' load(system.file("extdata", "exampleSSTData.RData", package = "grec"))
 #' out <- detectFronts(x = exampleSSTData)
 #' image(out, col = colPalette)
-detectFronts <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
+detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
   # Check and validation of arguments
   checkedArgs <- list(x = x, qLimits = qLimits, finalSmooth = finalSmooth, intermediate = intermediate,
                       control = control)
