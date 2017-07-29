@@ -1,7 +1,7 @@
 checkArgs <- function(grecArgs, type){
 
   output <- switch(type,
-                   detectFronts = checkArgs_detectFronts(grecArgs),
+                   detectFronts.default = checkArgs_detectFronts(grecArgs),
                    extraParams = checkArgs_extraParams(grecArgs),
                    "Invalid value for 'type'.")
 
@@ -17,12 +17,12 @@ checkArgs_detectFronts <- function(allArgs){
   intermediate <- allArgs$intermediate
   control <- allArgs$control
 
-  msg1 <- "If 'x' is a list, it must contain info for environmental map. See help(detectFronts)."
-  msg2 <- "If 'x' is a matrix, it must be a numerical matrix with environmental data. See help(detectFronts)."
-  msg3 <- "'x' must a matrix or list containing numerical values of environmental map. See help(detectFronts)."
+  msg1 <- "'x' must be a XYZ list containing environmental map info. See help(detectFronts)."
+  msg2 <- "'x' must be a numeric matrix with environmental data. See help(detectFronts)."
+  msg3 <- "'x' must be a numeric array  with environmental data. See help(detectFronts)."
+  msg4 <- "'x' must a matrix, list, RasterLayer or array with environmental data See help(detectFronts)."
 
   if(is.list(x)){
-
     # Check if x is a list with 'x', 'y', 'z' dimensions, where z is a numeric matrix
     index <- (length(x) == 3 && all(is.element(c("x", "y", "z"), letters)) &&
                 is.matrix(x$z) && is.numeric(x$z))
@@ -30,31 +30,39 @@ checkArgs_detectFronts <- function(allArgs){
       stop(msg1)
     }
   }else if(is.matrix(x)){
-
     # Check if x is a valid numerical matrix
-    index <- is.matrix(x$z) && is.numeric(x$z)
+    index <- is.matrix(x) && is.numeric(x)
     if(!index){
       stop(msg2)
     }
-  }else{
-    stop(msg3)
+
+    allArgs$x <- list(x = seq(nrow(x)),
+                      y = seq(ncol(x)),
+                      z = x)
+  }else if(is.array(x)){
+    # Check if x is a valid numerical array
+    if(!is.numeric(x) || length(dim(x)) > 3){
+      stop(msg3)
+    }
+  }else if(!class(x) != "RasterLayer"){
+    stop(msg4)
   }
 
-  msg4 <- "Invalid value for 'intermediate', it will take its default value (TRUE)."
+  msg1 <- "Invalid value for 'intermediate', it will take its default value (TRUE)."
   if(!is.logical(intermediate)){
     intermediate <- TRUE
-    warning(msg4)
+    warning(msg1)
   }
 
   # Check if qLimits is a numeric vector of length 1 or 2
-  msg5 <- "'qLimits' must be a numeric vector with values between 0 and 1."
+  msg1 <- "'qLimits' must be a numeric vector with values between 0 and 1."
   if(!is.numeric(qLimits)){
-    stop(msg5)
+    stop(msg1)
   }
 
-  msg6 <- "'qLimits' must be a numeric vector of length 1 or 2 and values between 0 and 1. See help(detectFronts)."
+  msg1 <- "'qLimits' must be a numeric vector of length 1 or 2 and values between 0 and 1. See help(detectFronts)."
   if(any(qLimits < 0 | qLimits > 1)){
-    stop(msg6)
+    stop(msg1)
   }
 
   if(length(qLimits) == 1){
@@ -66,12 +74,12 @@ checkArgs_detectFronts <- function(allArgs){
   }else if(length(qLimits) == 2){
     allArgs$qLimits <- sort(qLimits)
   }else{
-    stop(msg6)
+    stop(msg1)
   }
 
-  msg7 <- "'control' must be a named list with arguments for imagine functions. See help(detectFronts)."
+  msg1 <- "'control' must be a named list with arguments for imagine functions. See help(detectFronts)."
   if(!is.list(control)){
-    stop(msg7)
+    stop(msg1)
   }else{
     # Define extra parameters for filter
     control_default <- extraParams(fx = "detectFronts")
@@ -80,10 +88,10 @@ checkArgs_detectFronts <- function(allArgs){
     allArgs$control <- modifyList(control_default$detectFronts, control)
   }
 
-  msg8 <- "Invalid value for 'finalSmooth', it will take its default value (FALSE)."
+  msg1 <- "Invalid value for 'finalSmooth', it will take its default value (FALSE)."
   if(!is.logical(finalSmooth)){
     intermediate <- FALSE
-    warning(msg8)
+    warning(msg1)
   }
 
   return(allArgs)
@@ -100,6 +108,22 @@ checkArgs_extraParams <- function(allArgs){
   }
 
   return(allArgs)
+}
+
+#' @rdname detectFronts
+#' @export
+detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
+  # Check and validation of arguments
+  checkedArgs <- list(x = x, qLimits = qLimits, finalSmooth = finalSmooth, intermediate = intermediate,
+                      control = control)
+  checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
+
+  # Apply filters
+  output <- with(checkedArgs,
+                 detectFronts_internal(x = x, qLimits = qLimits, finalSmooth = finalSmooth,
+                                       intermediate = intermediate, control = control))
+
+  return(output)
 }
 
 detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control){

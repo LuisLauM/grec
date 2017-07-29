@@ -38,7 +38,9 @@ NULL
 #' @description This function takes a environmental map (as a numeric matrix) and allows the user to idenitify
 #' the gradients by using of sobel filters.
 #'
-#' @param x Either a list o numerical matrix with environmental info. See 'Details.'
+#' @rdname detectFronts
+#'
+#' @param x Main input of class \code{matrix}, \code{list}, \code{RasterLayer} or \code{array}. See 'Details.'
 #' @param qLimits \code{numeric} vector of length 1 or 2 with info of limits of values to consider. See 'Details'.
 #' @param finalSmooth \code{logical} indicating whether to apply a smooth to final matrix so as to remove noise.
 #' @param intermediate \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
@@ -58,6 +60,9 @@ NULL
 #' the dimensions of the data as follows: 'x' will be a numeric vector with the values of longitude,
 #' 'y' will indicate the latitude (numeric vector as well). 'grec' package is not rigorous in
 #' the check of the values given for dimensions, so the user must be carefull with them.
+#'
+#' \code{x} can be specified as a \code{RasterLayer} or \code{array} object. The output will preserve all the
+#' attributes and the order of input.
 #'
 #' \code{qLimits} works after the extraction of grandient matrix. Values of these matrix are vectorized
 #' and the quantiles indicated on \code{qLimits} are taken (that is the reason of the argument name). Then
@@ -81,25 +86,16 @@ NULL
 #' and SST satellite imagery. Journal of Marine Systems, 78(3), 319-326
 #' (\url{http://dx.doi.org/10.1016/j.jmarsys.2008.11.018}).
 #'
-#' @return Depending on \code{intermediate} argument, it can be a list or a single numeric matrix.
+#' @return Depending of input class of \code{x}, the output will preserve its class.
+#'
 #' @export
 #'
 #' @examples
 #' load(system.file("extdata", "exampleSSTData.RData", package = "grec"))
 #' out <- detectFronts(x = exampleSSTData)
 #' image(out, col = colPalette)
-detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
-  # Check and validation of arguments
-  checkedArgs <- list(x = x, qLimits = qLimits, finalSmooth = finalSmooth, intermediate = intermediate,
-                      control = control)
-  checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
-
-  # Apply filters
-  output <- with(checkedArgs,
-                 detectFronts_internal(x = x, qLimits = qLimits, finalSmooth = finalSmooth,
-                                      intermediate = intermediate, control = control))
-
-  return(output)
+detectFronts <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
+  UseMethod(generic = "detectFronts", object = x)
 }
 
 #' @title Gets the extra parameters for \code{grec} functions
