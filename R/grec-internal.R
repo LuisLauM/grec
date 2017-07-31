@@ -183,7 +183,9 @@ detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control
     newSobel <- medianFilter(dataMatrix = newSobel,
                              radius = control$clearNoise$radius,
                              times = control$clearNoise$times)
+  }
 
+  if(intermediate){
     output[[6]] <- list(x = x$x,
                         y = x$y,
                         z = newSobel)
@@ -207,11 +209,11 @@ extraParams_internal <- function(fx){
   for(i in seq_along(fx)){
     output[[i]] <- switch(fx[i],
                           detectFronts = list(firstSmooth = list(radius = 5,
-                                                                times = 10),
-                                             kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1),
-                                             sobelStrength = 10,
-                                             clearNoise = list(radius = 5,
-                                                               times = 1)),
+                                                                 times = 10),
+                                              kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1),
+                                              sobelStrength = 10,
+                                              clearNoise = list(radius = 5,
+                                                                times = 1)),
                           paste0("There is no extra parameters for ", fx[i], "."))
   }
 

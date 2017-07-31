@@ -61,8 +61,9 @@ NULL
 #' 'y' will indicate the latitude (numeric vector as well). 'grec' package is not rigorous in
 #' the check of the values given for dimensions, so the user must be carefull with them.
 #'
-#' \code{x} can be specified as a \code{RasterLayer} or \code{array} object. The output will preserve all the
-#' attributes and the order of input.
+#' \code{x} can be specified as a \code{RasterLayer} or \code{array} object. If \code{x} is an \code{array}, it
+#' must have 3 dimensions: lon, lat and time. It is not required to specify the \code{dimnames}. The output will
+#' preserve all the attributes and the order of input.
 #'
 #' \code{qLimits} works after the extraction of grandient matrix. Values of these matrix are vectorized
 #' and the quantiles indicated on \code{qLimits} are taken (that is the reason of the argument name). Then
