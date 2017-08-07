@@ -1,4 +1,4 @@
-#' @title Classification of Spatial Patterns from Environmental Data Through GRadient RECognition
+#' @title An R package for GRadient-based RECognition of spatial patterns in environmental data
 #' @import imagine
 #' @import raster
 #' @importFrom utils modifyList
@@ -23,14 +23,19 @@ NULL
 NULL
 
 #' @title Example map of SST from Aqua MODIS
-#' @name exampleSSTData
-#' @description A \code{list} with 3 levels (x, y, z) containing information of an SST map: longitud, latitude and
-#' values (as a \code{matrix}). Info was downloaded from Aqua MODIS, March, 2010.
+#' @name grecExData
+#' @description A \code{list} containing three environmental dataset for using as examples. Datasets
+#' of Surface Sea Temperature (\code{sst}), Chlorophyll at surface (\code{chlorophyll}) and Bathymetry
+#' (topography) were dowloaded from ERDDAP website.
+#'
+#' Chlorophyll and SST data are XYZT lists with monthly info from February to April 2015 from source
+#' Aqua MODIS, March, 2010.
 #' @aliases exampleSSTData
 #' @docType data
 #' @usage exampleSSTData
 #' @format A \code{list} with 3 levels (x, y, z). \code{x} and \code{y} are numeric vectors, \code{z}
 #' is a numeric \code{matrix}.
+#' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
 NULL
 
 #' @title Detection of fronts based on gradient recognition
@@ -92,7 +97,12 @@ NULL
 #' @export
 #'
 #' @examples
-#' load(system.file("extdata", "exampleSSTData.RData", package = "grec"))
+#' # Build an example data
+#' # Load example data
+#' exampleSSTData <- list(x = grecExData$sst$longitude,
+#'                        y = grecExData$sst$latitude,
+#'                        z = grecExData$sst$sst[,,1])
+#'
 #' out <- detectFronts(x = exampleSSTData)
 #' image(out, col = colPalette)
 detectFronts <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
