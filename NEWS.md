@@ -1,6 +1,7 @@
 # 1.1.1
   - Modifications on the title of package.
   - New set of exampling data (`grecExData`).
+  - Changes how the `detectFronts` algorithm works internally.
   
 
 # 1.1.0

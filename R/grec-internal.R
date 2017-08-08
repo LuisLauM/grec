@@ -2,6 +2,8 @@ checkArgs <- function(grecArgs, type){
 
   output <- switch(type,
                    detectFronts.default = checkArgs_detectFronts(grecArgs),
+                   detectFronts.array = checkArgs_detectFronts(grecArgs),
+                   detectFronts.RasterLayer = checkArgs_detectFronts(grecArgs),
                    extraParams = checkArgs_extraParams(grecArgs),
                    "Invalid value for 'type'.")
 
@@ -17,7 +19,7 @@ checkArgs_detectFronts <- function(allArgs){
   intermediate <- allArgs$intermediate
   control <- allArgs$control
 
-  msg1 <- "'x' must be a XYZ list containing environmental map info. See help(detectFronts)."
+  msg1 <- "'x' must be a XYZ list containing environmental map info (wheter a matrix or an array). See help(detectFronts)."
   msg2 <- "'x' must be a numeric matrix with environmental data. See help(detectFronts)."
   msg3 <- "'x' must be a numeric array  with environmental data. See help(detectFronts)."
   msg4 <- "'x' must a matrix, list, RasterLayer or array with environmental data See help(detectFronts)."
@@ -25,7 +27,7 @@ checkArgs_detectFronts <- function(allArgs){
   if(is.list(x)){
     # Check if x is a list with 'x', 'y', 'z' dimensions, where z is a numeric matrix
     index <- (length(x) == 3 && all(is.element(c("x", "y", "z"), letters)) &&
-                is.matrix(x$z) && is.numeric(x$z))
+                (is.matrix(x$z) || is.array(x$z)) && is.numeric(x$z))
     if(!index){
       stop(msg1)
     }
@@ -118,33 +120,74 @@ detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE,
                       control = control)
   checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
 
-  # Apply filters
-  output <- with(checkedArgs,
-                 detectFronts_internal(x = x, qLimits = qLimits, finalSmooth = finalSmooth,
-                                       intermediate = intermediate, control = control))
+  # Get fronts
+  if(is.list(checkedArgs$x)){
+    # If is a list (with array or matrix info), it preserves the x and y dimension
+    if(is.matrix(checkedArgs$x$z)){
+      outMatrix <- with(checkedArgs,
+                        detectFronts_internal(x = x$z, qLimits = qLimits, finalSmooth = finalSmooth,
+                                           intermediate = intermediate, control = control))
+
+      if(isTRUE(checkedArgs$intermediate)){
+        output <- list()
+        for(i in seq(dim(outMatrix)[3])){
+          output[[i]] <- list(x = checkedArgs$x$x,
+                              y = checkedArgs$x$y,
+                              z = outMatrix[,,i])
+        }
+
+        names(output) <- c("original", "first_smooth", "sobel_H", "sobel_V", "gradient",
+                           if(isTRUE(checkedArgs$finalSmooth)) "noise_cleared" else NULL)
+      }else{
+        output <- list(x = checkedArgs$x$x,
+                       y = checkedArgs$x$y,
+                       z = outMatrix)
+      }
+    }else if(is.array(checkedArgs$x$z)){
+      outMatrix <- with(checkedArgs,
+                        detectFronts.array(x = x$z, qLimits = qLimits, finalSmooth = finalSmooth,
+                                           intermediate = intermediate, control = control))
+
+      if(isTRUE(checkedArgs$intermediate)){
+        output <- list()
+
+        for(i in seq(dim(outMatrix[[1]])[3])){
+          output[[i]] <- list(x = checkedArgs$x$x,
+                              y = checkedArgs$x$y,
+                              z = sapply(outMatrix, function(x, index) x[,,index], index = i))
+        }
+
+        names(output) <- c("original", "first_smooth", "sobel_H", "sobel_V", "gradient",
+                           if(isTRUE(checkedArgs$finalSmooth)) "noise_cleared" else NULL)
+      }else{
+        output <- list(x = checkedArgs$x$x,
+                       y = checkedArgs$x$y,
+                       z = outMatrix)
+      }
+    }
+  }else if(is.matrix(checkedArgs$x)){
+    output <- with(checkedArgs,
+                   detectFronts_internal(x = x$z, qLimits = qLimits, finalSmooth = finalSmooth,
+                                         intermediate = intermediate, control = control))
+  }
 
   return(output)
 }
 
 detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control){
-
   # Create empty list for outputs
   if(intermediate){
-    output <- list()
-    output[[1]] <- list(x = x$x,
-                        y = x$y,
-                        z = x$z)
+    output <- array(data = NA, dim = c(dim(x),  ifelse(isTRUE(finalSmooth), 6, 5)))
+    output[,,1] <- x
   }
 
   # Make a first smooth
-  preMatrix <- medianFilter(dataMatrix = x$z,
+  preMatrix <- medianFilter(dataMatrix = x,
                             radius = control$firstSmooth$radius,
                             times = control$firstSmooth$times)
 
   if(intermediate){
-    output[[2]] <- list(x = x$x,
-                        y = x$y,
-                        z = preMatrix)
+    output[,,2] <- preMatrix
   }
 
   # Define sobel kernel values
@@ -159,12 +202,8 @@ detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control
   filteredV <- convolution2D(dataMatrix = preMatrix, kernel = sobelV, noNA = TRUE)
 
   if(intermediate){
-    output[[3]] <- list(x = x$x,
-                        y = x$y,
-                        z = filteredH)
-    output[[4]] <- list(x = x$x,
-                        y = x$y,
-                        z = filteredV)
+    output[,,3] <- filteredH
+    output[,,4] <- filteredV
   }
 
   # Calculate gradient
@@ -173,31 +212,22 @@ detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control
   newSobel[newSobel < qLimits[1] | newSobel > qLimits[2]] <- NA
 
   if(intermediate){
-    output[[5]] <- list(x = x$x,
-                        y = x$y,
-                        z = newSobel)
+    output[,,5] <- newSobel
   }
 
   # Clear noisy signals
   if(isTRUE(finalSmooth)){
-    newSobel <- medianFilter(dataMatrix = newSobel,
-                             radius = control$clearNoise$radius,
-                             times = control$clearNoise$times)
-  }
+    clearNoise <- medianFilter(dataMatrix = newSobel,
+                               radius = control$clearNoise$radius,
+                               times = control$clearNoise$times)
 
-  if(intermediate){
-    output[[6]] <- list(x = x$x,
-                        y = x$y,
-                        z = newSobel)
-  }
-
-  if(intermediate){
-    names(output) <- c("original", "first_smooth", "sobel_H", "sobel_V", "gradient",
-                       if(isTRUE(finalSmooth)) "noise_cleared" else NULL)
-  }else{
-    output <- list(x = x$x,
-                   y = x$y,
-                   z = newSobel)
+    if(intermediate){
+      output[,,6] <- clearNoise
+    }else{
+      output <- clearNoise
+    }
+  }else if(!intermediate){
+    output <- newSobel
   }
 
   return(output)
