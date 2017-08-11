@@ -2,9 +2,10 @@
 # Detect fronts --------------------------------------------------------------------------
 
 # Load example data
-exampleSSTData <- list(x = grecExData$sstData$longitude,
-                       y = grecExData$sstData$latitude,
-                       z = grecExData$sstData$chlorophyll)
+data(sst)
+exampleSSTData <- list(x = sst$longitude,
+                       y = sst$latitude,
+                       z = sst$sst)
 
 # Apply detectFronts function
 out <- detectFronts(x = exampleSSTData, intermediate = TRUE, finalSmooth = FALSE)

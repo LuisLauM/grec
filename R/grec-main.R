@@ -18,23 +18,38 @@ NULL
 #' @aliases colPalette
 #' @docType data
 #' @usage colPalette
+#' @export
 #' @format A vector of 2000 colors in RBG format.
 #' @references \code{fields} package
 NULL
 
-#' @title Example map of SST from Aqua MODIS
-#' @name grecExData
-#' @description A \code{list} containing three environmental dataset for using as examples. Datasets
-#' of Surface Sea Temperature (\code{sst}), Chlorophyll at surface (\code{chlorophyll}) and Bathymetry
-#' (topography) were dowloaded from ERDDAP website.
-#'
-#' Chlorophyll and SST data are XYZT lists with monthly info from February to April 2015 from source
-#' Aqua MODIS, March, 2010.
-#' @aliases exampleSSTData
+#' @title Sea Surface Temperature Data
+#' @name sst
+#' @description SST maps downloaded from ERDDAP for running examples with \code{grec} functions.
+#' @aliases sst
 #' @docType data
-#' @usage exampleSSTData
-#' @format A \code{list} with 3 levels (x, y, z). \code{x} and \code{y} are numeric vectors, \code{z}
-#' is a numeric \code{matrix}.
+#' @usage sst
+#' @format A \code{list} with SST information from February to April of Aqua MODIS source.
+#' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
+NULL
+
+#' @title Sea Surface Chlorophyll Data
+#' @name chl
+#' @description Surface chlorophyll maps downloaded from ERDDAP for running examples with \code{grec} functions.
+#' @aliases chl
+#' @docType data
+#' @usage chl
+#' @format A \code{list} with chlorophyll information from February to April of Aqua MODIS source.
+#' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
+NULL
+
+#' @title Bathymetric data
+#' @name bathy
+#' @description Bathymetric maps downloaded from ERDDAP for running examples with \code{grec} functions.
+#' @aliases bathy
+#' @docType data
+#' @usage bathy
+#' @format A \code{list} with bathymetric information from ETOPO source.
 #' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
 NULL
 
@@ -99,9 +114,10 @@ NULL
 #' @examples
 #' # Build an example data
 #' # Load example data
-#' exampleSSTData <- list(x = grecExData$sst$longitude,
-#'                        y = grecExData$sst$latitude,
-#'                        z = grecExData$sst$sst[,,1])
+#' data(sst)
+#' exampleSSTData <- list(x = sst$longitude,
+#'                        y = sst$latitude,
+#'                        z = sst$sst[,,1])
 #'
 #' out <- detectFronts(x = exampleSSTData)
 #' image(out, col = colPalette)
