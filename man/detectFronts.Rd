@@ -79,9 +79,10 @@ given as a named list.}
 \examples{
 # Build an example data
 # Load example data
-exampleSSTData <- list(x = grecExData$sst$longitude,
-                       y = grecExData$sst$latitude,
-                       z = grecExData$sst$sst[,,1])
+data(sst)
+exampleSSTData <- list(x = sst$longitude,
+                       y = sst$latitude,
+                       z = sst$sst[,,1])
 
 out <- detectFronts(x = exampleSSTData)
 image(out, col = colPalette)

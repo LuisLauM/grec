@@ -11,5 +11,5 @@ Description: Provides algorithms for detection of spatial patterns from oceanogr
 License: GPL (>= 2)
 Depends: R (>= 3.2.0), imagine (>= 1.3.1), raster
 Imports: utils
-LazyData: yes
+LazyData: true
 RoxygenNote: 6.0.1

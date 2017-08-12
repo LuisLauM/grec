@@ -18,7 +18,6 @@ NULL
 #' @aliases colPalette
 #' @docType data
 #' @usage colPalette
-#' @export
 #' @format A vector of 2000 colors in RBG format.
 #' @references \code{fields} package
 NULL
