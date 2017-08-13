@@ -4,7 +4,7 @@
 \name{grec-package}
 \alias{grec-package}
 \alias{grec}
-\title{An R package for GRadient-based RECognition of spatial patterns in environmental data}
+\title{GRadient-based RECognition of spatial patterns in environmental data}
 \description{
 Provides algorithms for detection of spatial patterns from oceanographic data using image
 processing methods based on Gradient Recognition.

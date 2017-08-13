@@ -1,4 +1,4 @@
-#' @title An R package for GRadient-based RECognition of spatial patterns in environmental data
+#' @title GRadient-based RECognition of spatial patterns in environmental data
 #' @import imagine
 #' @import raster
 #' @importFrom utils modifyList
@@ -117,8 +117,16 @@ NULL
 #' exampleSSTData <- list(x = sst$longitude,
 #'                        y = sst$latitude,
 #'                        z = sst$sst[,,1])
-#'
+#' # Simple application
 #' out <- detectFronts(x = exampleSSTData)
+#' image(out, col = colPalette)
+#'
+#' # qLimits effect
+#' out <- detectFronts(x = exampleSSTData, qLimits = c(0.75, 0.99))
+#' image(out, col = colPalette)
+#'
+#' # Simple application
+#' out <- detectFronts(x = exampleSSTData, finalSmooth = TRUE)
 #' image(out, col = colPalette)
 detectFronts <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
   UseMethod(generic = "detectFronts", object = x)

@@ -83,8 +83,16 @@ data(sst)
 exampleSSTData <- list(x = sst$longitude,
                        y = sst$latitude,
                        z = sst$sst[,,1])
-
+# Simple application
 out <- detectFronts(x = exampleSSTData)
+image(out, col = colPalette)
+
+# qLimits effect
+out <- detectFronts(x = exampleSSTData, qLimits = c(0.75, 0.99))
+image(out, col = colPalette)
+
+# Simple application
+out <- detectFronts(x = exampleSSTData, finalSmooth = TRUE)
 image(out, col = colPalette)
 }
 \references{
