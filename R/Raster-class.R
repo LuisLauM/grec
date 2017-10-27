@@ -1,8 +1,8 @@
 #' @rdname detectFronts
 #' @method detectFronts RasterLayer
 #' @export
-detectFronts.RasterLayer <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE,
-                                control = list()){
+detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", finalSmooth = FALSE,
+                                     intermediate = FALSE, control = list(), ...){
 
   # Extract coordinates and data for calculate fronts from Raster and convert to list
   startMatrix <- matrix(data = x@data@values, nrow = x@ncols, ncol = x@nrows)
@@ -12,8 +12,16 @@ detectFronts.RasterLayer <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FA
                       # z = startMatrix[,seq(x@nrows, 1)])
 
   # Apply the basic function
-  allOuts <- detectFronts.default(x = startMatrix, qLimits = qLimits, finalSmooth = finalSmooth,
-                                  intermediate = intermediate, control = control)
+  allOuts <- switch(method,
+                    BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = startMatrix,
+                                                                       finalSmooth = finalSmooth,
+                                                                       intermediate = intermediate,
+                                                                       control = control),
+                    LauMedrano = detectFronts_LauMedrano(x = startMatrix,
+                                                         qLimits = list(...)$qLimits,
+                                                         finalSmooth = finalSmooth,
+                                                         intermediate = intermediate,
+                                                         control = control))
 
   # Depending on 'intermediate', the output will be a single Raster or a list of them
   if(isTRUE(intermediate)){

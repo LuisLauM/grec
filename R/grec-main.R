@@ -60,7 +60,7 @@ NULL
 #' @rdname detectFronts
 #'
 #' @param x Main input of class \code{matrix}, \code{list}, \code{RasterLayer} or \code{array}. See 'Details.'
-#' @param qLimits \code{numeric} vector of length 1 or 2 with info of limits of values to consider. See 'Details'.
+#' @param method \code{character} string indicating the method that will be used. See 'Details'.
 #' @param finalSmooth \code{logical} indicating whether to apply a smooth to final matrix so as to remove noise.
 #' @param intermediate \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
 #' or just the final one (\code{FALSE}).
@@ -84,7 +84,11 @@ NULL
 #' must have 3 dimensions: lon, lat and time. It is not required to specify the \code{dimnames}. The output will
 #' preserve all the attributes and the order of input.
 #'
-#' \code{qLimits} works after the extraction of grandient matrix. Values of these matrix are vectorized
+#' By \code{method}, users can change the methodology used for the calculation of fronts. It will
+#' be used the proposed by Belkin & O'Reilly (2009), as default.
+#'
+#' If \code{method = "LauMedrano"}, the user can specify another parameters, like \code{qLimits}, which works
+#' after the extraction of grandient matrix. Values of these matrix are vectorized
 #' and the quantiles indicated on \code{qLimits} are taken (that is the reason of the argument name). Then
 #' the values out of the limits are replaced by \code{NA}. \code{qLimits} could be given as a single value.
 #' If so, the second value must be calculated as \code{c(qLimits, qLimits + (1 - qLimits)/2)}.
@@ -128,7 +132,8 @@ NULL
 #' # Simple application
 #' out <- detectFronts(x = exampleSSTData, finalSmooth = TRUE)
 #' image(out, col = colPalette)
-detectFronts <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
+detectFronts <- function(x, method = "BelkinOReilly2009", finalSmooth = FALSE, intermediate = FALSE,
+                         control = list(), ...){
   UseMethod(generic = "detectFronts", object = x)
 }
 

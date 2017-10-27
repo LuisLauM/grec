@@ -5,10 +5,10 @@
 data(sst)
 exampleSSTData <- list(x = sst$longitude,
                        y = sst$latitude,
-                       z = sst$sst)
+                       z = sst$sst[,,1])
 
 # Apply detectFronts function
-out <- detectFronts(x = exampleSSTData, intermediate = TRUE, finalSmooth = FALSE)
+out <- detectFronts(x = exampleSSTData, intermediate = TRUE, finalSmooth = TRUE)
 str(out)
 
 # Make plots -----------------------------------------------------------------------------

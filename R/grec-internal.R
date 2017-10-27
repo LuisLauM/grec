@@ -11,14 +11,21 @@ checkArgs <- function(grecArgs, type){
 }
 
 
-checkArgs_detectFronts <- function(allArgs){
+checkArgs_detectFronts <- function(allArgs, ...){
 
-  x <- allArgs$x
-  qLimits <- sort(unique(allArgs$qLimits))
-  finalSmooth <- allArgs$finalSmooth
-  intermediate <- allArgs$intermediate
-  control <- allArgs$control
+  # Define parameters
+  x             <- allArgs$x
+  method        <- allArgs$method
+  finalSmooth   <- allArgs$finalSmooth
+  intermediate  <- allArgs$intermediate
+  control       <- allArgs$control
 
+  methodList <- c("LauMedrano", "BelkinOReilly2009")
+  if(!is.element(method, methodList)){
+    stop("No valid method for front calculation.")
+  }
+
+  # Define stop messages
   msg1 <- "'x' must be a XYZ list containing environmental map info (wheter a matrix or an array). See help(detectFronts)."
   msg2 <- "'x' must be a numeric matrix with environmental data. See help(detectFronts)."
   msg3 <- "'x' must be a numeric array  with environmental data. See help(detectFronts)."
@@ -56,27 +63,25 @@ checkArgs_detectFronts <- function(allArgs){
     warning(msg1)
   }
 
-  # Check if qLimits is a numeric vector of length 1 or 2
-  msg1 <- "'qLimits' must be a numeric vector with values between 0 and 1."
-  if(!is.numeric(qLimits)){
-    stop(msg1)
-  }
+  if(method == "LauMedrano"){
+    qLimits <- sort(unique(allArgs$qLimits))
 
-  msg1 <- "'qLimits' must be a numeric vector of length 1 or 2 and values between 0 and 1. See help(detectFronts)."
-  if(any(qLimits < 0 | qLimits > 1)){
-    stop(msg1)
-  }
-
-  if(length(qLimits) == 1){
-    if(isTRUE(all.equal(qLimits, 1))){
-      allArgs$qLimits <- c(qLimits, qLimits)
-    }else{
-      allArgs$qLimits <- c(qLimits, qLimits + (1 - qLimits)/2)
+    msg1 <- "'qLimits' must be a numeric vector of length 1 or 2 and values between 0 and 1. See help(detectFronts)."
+    if(!is.numeric(qLimits) || any(qLimits < 0 | qLimits > 1)){
+      stop(msg1)
     }
-  }else if(length(qLimits) == 2){
-    allArgs$qLimits <- sort(qLimits)
-  }else{
-    stop(msg1)
+
+    if(length(qLimits) == 1){
+      if(isTRUE(all.equal(qLimits, 1))){
+        allArgs$qLimits <- c(qLimits, qLimits)
+      }else{
+        allArgs$qLimits <- c(qLimits, qLimits + (1 - qLimits)/2)
+      }
+    }else if(length(qLimits) == 2){
+      allArgs$qLimits <- sort(qLimits)
+    }else{
+      stop(msg1)
+    }
   }
 
   msg1 <- "'control' must be a named list with arguments for imagine functions. See help(detectFronts)."
@@ -114,10 +119,11 @@ checkArgs_extraParams <- function(allArgs){
 
 #' @rdname detectFronts
 #' @export
-detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE, intermediate = FALSE, control = list()){
+detectFronts.default <- function(x, method = "BelkinOReilly2009", finalSmooth = FALSE,
+                                 intermediate = FALSE, control = list(), ...){
   # Check and validation of arguments
-  checkedArgs <- list(x = x, qLimits = qLimits, finalSmooth = finalSmooth, intermediate = intermediate,
-                      control = control)
+  checkedArgs <- list(x = x, method = method, finalSmooth = finalSmooth, intermediate = intermediate,
+                      control = control, ...)
   checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
 
   # Get fronts
@@ -125,8 +131,16 @@ detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE,
     # If is a list (with array or matrix info), it preserves the x and y dimension
     if(is.matrix(checkedArgs$x$z)){
       outMatrix <- with(checkedArgs,
-                        detectFronts_internal(x = x$z, qLimits = qLimits, finalSmooth = finalSmooth,
-                                           intermediate = intermediate, control = control))
+                        switch(method,
+                               BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = x$z,
+                                                                          finalSmooth = finalSmooth,
+                                                                          intermediate = intermediate,
+                                                                          control = control),
+                               LauMedrano = detectFronts_LauMedrano(x = x$z,
+                                                                    qLimits = list(...)$qLimits,
+                                                                    finalSmooth = finalSmooth,
+                                                                    intermediate = intermediate,
+                                                                    control = control)))
 
       if(isTRUE(checkedArgs$intermediate)){
         output <- list()
@@ -145,7 +159,7 @@ detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE,
       }
     }else if(is.array(checkedArgs$x$z)){
       outMatrix <- with(checkedArgs,
-                        detectFronts.array(x = x$z, qLimits = qLimits, finalSmooth = finalSmooth,
+                        detectFronts.array(x = x$z, method = method, finalSmooth = finalSmooth,
                                            intermediate = intermediate, control = control))
 
       if(isTRUE(checkedArgs$intermediate)){
@@ -167,14 +181,27 @@ detectFronts.default <- function(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE,
     }
   }else if(is.matrix(checkedArgs$x)){
     output <- with(checkedArgs,
-                   detectFronts_internal(x = x$z, qLimits = qLimits, finalSmooth = finalSmooth,
-                                         intermediate = intermediate, control = control))
+                   switch(method,
+                          BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = x$z,
+                                                                             finalSmooth = finalSmooth,
+                                                                             intermediate = intermediate,
+                                                                             control = control),
+                          LauMedrano = detectFronts_LauMedrano(x = x$z,
+                                                               qLimits = list(...)$qLimits,
+                                                               finalSmooth = finalSmooth,
+                                                               intermediate = intermediate,
+                                                               control = control)))
   }
 
   return(output)
 }
 
-detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control){
+detectFronts_LauMedrano <- function(x, qLimits, finalSmooth, intermediate, control){
+
+  if(is.null(qLimits)){
+    qLimits <- c(0.9, 0.99)
+  }
+
   # Create empty list for outputs
   if(intermediate){
     output <- array(data = NA, dim = c(dim(x),  ifelse(isTRUE(finalSmooth), 6, 5)))
@@ -210,6 +237,61 @@ detectFronts_internal <- function(x, qLimits, finalSmooth, intermediate, control
   newSobel <- sqrt(filteredH^2 + filteredV^2)
   qLimits <- quantile(x = as.numeric(newSobel), probs = qLimits, na.rm = TRUE)
   newSobel[newSobel < qLimits[1] | newSobel > qLimits[2]] <- NA
+
+  if(intermediate){
+    output[,,5] <- newSobel
+  }
+
+  # Clear noisy signals
+  if(isTRUE(finalSmooth)){
+    clearNoise <- medianFilter(dataMatrix = newSobel,
+                               radius = control$clearNoise$radius,
+                               times = control$clearNoise$times)
+
+    if(intermediate){
+      output[,,6] <- clearNoise
+    }else{
+      output <- clearNoise
+    }
+  }else if(!intermediate){
+    output <- newSobel
+  }
+
+  return(output)
+}
+
+detectFronts_BelkinOReilly2009 <- function(x, finalSmooth, intermediate, control){
+  # Create empty list for outputs
+  if(intermediate){
+    output <- array(data = NA, dim = c(dim(x),  ifelse(isTRUE(finalSmooth), 6, 5)))
+    output[,,1] <- x
+  }
+
+  # Make a first smooth
+  preMatrix <- contextualMF(dataMatrix = x)
+
+  if(intermediate){
+    output[,,2] <- preMatrix
+  }
+
+  # Define sobel kernel values
+  sobelKernel <- control$sobelStrength*control$kernelValues
+
+  # Define sobel kernels
+  sobelH <- matrix(data = sobelKernel, nrow = 3, byrow = TRUE)
+  sobelV <- matrix(data = sobelKernel, nrow = 3, byrow = FALSE)
+
+  # Apply sobel filters (horizontal and vertical)
+  filteredH <- convolution2D(dataMatrix = preMatrix, kernel = sobelH, noNA = TRUE)
+  filteredV <- convolution2D(dataMatrix = preMatrix, kernel = sobelV, noNA = TRUE)
+
+  if(intermediate){
+    output[,,3] <- filteredH
+    output[,,4] <- filteredV
+  }
+
+  # Calculate gradient
+  newSobel <- sqrt(filteredH^2 + filteredV^2)
 
   if(intermediate){
     output[,,5] <- newSobel
