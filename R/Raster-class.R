@@ -9,19 +9,24 @@ detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", finalSmoot
   startMatrix <- list(x = seq(from = x@extent@xmin, to = x@extent@xmax, length.out = x@ncols),
                       y = seq(from = x@extent@ymin, to = x@extent@ymax, length.out = x@nrows),
                       z = startMatrix)
-                      # z = startMatrix[,seq(x@nrows, 1)])
+
+  # Check and validation of arguments
+  checkedArgs <- list(x = startMatrix, method = method, finalSmooth = finalSmooth, intermediate = intermediate,
+                      control = control, ...)
+  checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
 
   # Apply the basic function
-  allOuts <- switch(method,
-                    BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = startMatrix,
-                                                                       finalSmooth = finalSmooth,
-                                                                       intermediate = intermediate,
-                                                                       control = control),
-                    LauMedrano = detectFronts_LauMedrano(x = startMatrix,
-                                                         qLimits = list(...)$qLimits,
-                                                         finalSmooth = finalSmooth,
-                                                         intermediate = intermediate,
-                                                         control = control))
+  allOuts <- with(checkedArgs,
+                  switch(method,
+                         BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = startMatrix$z,
+                                                                            finalSmooth = finalSmooth,
+                                                                            intermediate = intermediate,
+                                                                            control = control),
+                         LauMedrano = detectFronts_LauMedrano(x = startMatrix$z,
+                                                              qLimits = list(...)$qLimits,
+                                                              finalSmooth = finalSmooth,
+                                                              intermediate = intermediate,
+                                                              control = control)))
 
   # Depending on 'intermediate', the output will be a single Raster or a list of them
   if(isTRUE(intermediate)){

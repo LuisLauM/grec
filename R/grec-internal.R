@@ -64,6 +64,12 @@ checkArgs_detectFronts <- function(allArgs, ...){
   }
 
   if(method == "LauMedrano"){
+
+    allArgs$qLimits <- list(...)$qLimits
+    if(is.null(allArgs$qLimits)){
+      allArgs$qLimits <- c(0.9, 0.99)
+    }
+
     qLimits <- sort(unique(allArgs$qLimits))
 
     msg1 <- "'qLimits' must be a numeric vector of length 1 or 2 and values between 0 and 1. See help(detectFronts)."
