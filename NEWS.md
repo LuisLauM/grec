@@ -1,3 +1,7 @@
+# 1.1.2
+  - Now, `detectFronts` function has the `method` argument, using by default the Belkin & O'Reilly (2009) algorithm.
+  - Some little corrections.
+
 # 1.1.1
   - Modifications on the title of package.
   - New set of exampling data (`grecExData`).
