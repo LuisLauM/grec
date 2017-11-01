@@ -65,6 +65,7 @@ NULL
 #' @param intermediate \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
 #' or just the final one (\code{FALSE}).
 #' @param control A \code{list} of control parameters for filter application See 'Details'.
+#' @param ... Extra arguments that will depend on the selected method.
 #'
 #' @details Inspired by the algorithm described on Belkin & O'Reilly (2009), this function performs 4 steps:
 #' \enumerate{
@@ -87,8 +88,8 @@ NULL
 #' By \code{method}, users can change the methodology used for the calculation of fronts. It will
 #' be used the proposed by Belkin & O'Reilly (2009), as default.
 #'
-#' If \code{method = "LauMedrano"}, the user can specify another parameters, like \code{qLimits}, which works
-#' after the extraction of grandient matrix. Values of these matrix are vectorized
+#' If \code{method = "LauMedrano"}, the user can specify another parameters (using \code{...}), like \code{qLimits},
+#' which works after the extraction of grandient matrix. Values of these matrix are vectorized
 #' and the quantiles indicated on \code{qLimits} are taken (that is the reason of the argument name). Then
 #' the values out of the limits are replaced by \code{NA}. \code{qLimits} could be given as a single value.
 #' If so, the second value must be calculated as \code{c(qLimits, qLimits + (1 - qLimits)/2)}.

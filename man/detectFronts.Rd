@@ -8,22 +8,22 @@
 \alias{detectFronts}
 \title{Detection of fronts based on gradient recognition}
 \usage{
-\method{detectFronts}{RasterLayer}(x, qLimits = c(0.9, 0.99),
-  finalSmooth = FALSE, intermediate = FALSE, control = list())
+\method{detectFronts}{RasterLayer}(x, method = "BelkinOReilly2009",
+  finalSmooth = FALSE, intermediate = FALSE, control = list(), ...)
 
-\method{detectFronts}{array}(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE,
-  intermediate = FALSE, control = list())
+\method{detectFronts}{array}(x, method = "BelkinOReilly2009",
+  finalSmooth = FALSE, intermediate = FALSE, control = list(), ...)
 
-\method{detectFronts}{default}(x, qLimits = c(0.9, 0.99),
-  finalSmooth = FALSE, intermediate = FALSE, control = list())
+\method{detectFronts}{default}(x, method = "BelkinOReilly2009",
+  finalSmooth = FALSE, intermediate = FALSE, control = list(), ...)
 
-detectFronts(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE,
-  intermediate = FALSE, control = list())
+detectFronts(x, method = "BelkinOReilly2009", finalSmooth = FALSE,
+  intermediate = FALSE, control = list(), ...)
 }
 \arguments{
 \item{x}{Main input of class \code{matrix}, \code{list}, \code{RasterLayer} or \code{array}. See 'Details.'}
 
-\item{qLimits}{\code{numeric} vector of length 1 or 2 with info of limits of values to consider. See 'Details'.}
+\item{method}{\code{character} string indicating the method that will be used. See 'Details'.}
 
 \item{finalSmooth}{\code{logical} indicating whether to apply a smooth to final matrix so as to remove noise.}
 
@@ -31,6 +31,8 @@ detectFronts(x, qLimits = c(0.9, 0.99), finalSmooth = FALSE,
 or just the final one (\code{FALSE}).}
 
 \item{control}{A \code{list} of control parameters for filter application See 'Details'.}
+
+\item{...}{Extra arguments that will depend on the selected method.}
 }
 \value{
 Depending of input class of \code{x}, the output will preserve its class.
@@ -58,7 +60,11 @@ the check of the values given for dimensions, so the user must be carefull with 
 must have 3 dimensions: lon, lat and time. It is not required to specify the \code{dimnames}. The output will
 preserve all the attributes and the order of input.
 
-\code{qLimits} works after the extraction of grandient matrix. Values of these matrix are vectorized
+By \code{method}, users can change the methodology used for the calculation of fronts. It will
+be used the proposed by Belkin & O'Reilly (2009), as default.
+
+If \code{method = "LauMedrano"}, the user can specify another parameters, like \code{qLimits}, which works
+after the extraction of grandient matrix. Values of these matrix are vectorized
 and the quantiles indicated on \code{qLimits} are taken (that is the reason of the argument name). Then
 the values out of the limits are replaced by \code{NA}. \code{qLimits} could be given as a single value.
 If so, the second value must be calculated as \code{c(qLimits, qLimits + (1 - qLimits)/2)}.
