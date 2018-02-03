@@ -40,7 +40,7 @@ detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", finalSmoot
     names(output) <- names(allOuts)
   }else{
     output <- x
-    output[] <- as.numeric(allOuts$z)
+    output[] <- as.numeric(allOuts)
   }
 
   return(output)
