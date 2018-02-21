@@ -45,9 +45,7 @@ checkArgs_detectFronts <- function(allArgs, ...){
       stop(msg2)
     }
 
-    allArgs$x <- list(x = seq(nrow(x)),
-                      y = seq(ncol(x)),
-                      z = x)
+    allArgs$x <- x
   }else if(is.array(x)){
     # Check if x is a valid numerical array
     if(!is.numeric(x) || length(dim(x)) > 3){
@@ -188,11 +186,11 @@ detectFronts.default <- function(x, method = "BelkinOReilly2009", finalSmooth = 
   }else if(is.matrix(checkedArgs$x)){
     output <- with(checkedArgs,
                    switch(method,
-                          BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = x$z,
+                          BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = x,
                                                                              finalSmooth = finalSmooth,
                                                                              intermediate = intermediate,
                                                                              control = control),
-                          LauMedrano = detectFronts_LauMedrano(x = x$z,
+                          LauMedrano = detectFronts_LauMedrano(x = x,
                                                                qLimits = list(...)$qLimits,
                                                                finalSmooth = finalSmooth,
                                                                intermediate = intermediate,
