@@ -137,9 +137,9 @@ detectFronts.default <- function(x, method = "BelkinOReilly2009", finalSmooth = 
       outMatrix <- with(checkedArgs,
                         switch(method,
                                BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = x$z,
-                                                                          finalSmooth = finalSmooth,
-                                                                          intermediate = intermediate,
-                                                                          control = control),
+                                                                                  finalSmooth = finalSmooth,
+                                                                                  intermediate = intermediate,
+                                                                                  control = control),
                                LauMedrano = detectFronts_LauMedrano(x = x$z,
                                                                     qLimits = list(...)$qLimits,
                                                                     finalSmooth = finalSmooth,
@@ -272,7 +272,8 @@ detectFronts_BelkinOReilly2009 <- function(x, finalSmooth, intermediate, control
   }
 
   # Make a first smooth
-  preMatrix <- contextualMF(dataMatrix = x)
+  preMatrix <- contextualMF(dataMatrix = x, inner_radius = control$firstSmooth$inner_radius,
+                            outer_radius = control$firstSmooth$outer_radius, times = control$firstSmooth$times)
 
   if(intermediate){
     output[,,2] <- preMatrix
@@ -324,10 +325,12 @@ extraParams_internal <- function(fx){
 
   for(i in seq_along(fx)){
     output[[i]] <- switch(fx[i],
-                          detectFronts = list(firstSmooth = list(radius = 5,
-                                                                 times = 10),
+                          detectFronts = list(firstSmooth = list(inner_radius = 3,
+                                                                 outer_radius = 5,
+                                                                 x = 0.5,
+                                                                 times = 1),
                                               kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1),
-                                              sobelStrength = 10,
+                                              sobelStrength = 1,
                                               clearNoise = list(radius = 5,
                                                                 times = 1)),
                           paste0("There is no extra parameters for ", fx[i], "."))
