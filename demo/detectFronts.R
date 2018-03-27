@@ -8,7 +8,7 @@ exampleSSTData <- list(x = sst$longitude,
                        z = sst$sst[,,1])
 
 # Apply detectFronts function
-out <- detectFronts(x = exampleSSTData, method = "LauMedrano", intermediate = TRUE, finalSmooth = TRUE)
+out <- detectFronts(x = exampleSSTData, intermediate = TRUE, finalSmooth = TRUE)
 str(out)
 
 # Make plots -----------------------------------------------------------------------------
