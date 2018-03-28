@@ -85,14 +85,8 @@ NULL
 #' must have 3 dimensions: lon, lat and time. It is not required to specify the \code{dimnames}. The output will
 #' preserve all the attributes and the order of input.
 #'
-#' By \code{method}, users can change the methodology used for the calculation of fronts. It will
-#' be used the proposed by Belkin & O'Reilly (2009), as default.
-#'
-#' If \code{method = "LauMedrano"}, the user can specify another parameters (using \code{...}), like \code{qLimits},
-#' which works after the extraction of grandient matrix. Values of these matrix are vectorized
-#' and the quantiles indicated on \code{qLimits} are taken (that is the reason of the argument name). Then
-#' the values out of the limits are replaced by \code{NA}. \code{qLimits} could be given as a single value.
-#' If so, the second value must be calculated as \code{c(qLimits, qLimits + (1 - qLimits)/2)}.
+#' By \code{method}, users can change the methodology used for the calculation of fronts, Belkin & O'Reilly (2009)
+#' by default.
 #'
 #' The control argument is a list that allows the (advanced) users modify some aspects of filter
 #' application. The parameters of \code{control} are given to functions of \code{\link{imagine}} package.
@@ -153,10 +147,10 @@ detectFronts <- function(x, method = "BelkinOReilly2009", finalSmooth = FALSE, i
 #' @examples
 #' # For getting all the extra parameters
 #' extraParams()
-extraParams <- function(fx = c("detectFronts")){
+extraParams <- function(fx = "detectFronts"){
   # Check and validation of arguments
   checkedArgs <- list(fx = fx)
-  checkedArgs <- checkArgs(grecArgs = checkedArgs, type = as.character(match.call())[1])
+  checkedArgs <- checkArgs(grecArgs = checkedArgs, type = "extraParams")
 
   output <- with(checkedArgs, extraParams_internal(fx = fx))
 

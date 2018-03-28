@@ -26,10 +26,10 @@ checkArgs_detectFronts <- function(allArgs, ...){
   }
 
   # Define stop messages
-  msg1 <- "'x' must be a XYZ list containing environmental map info (wheter a matrix or an array). See help(detectFronts)."
-  msg2 <- "'x' must be a numeric matrix with environmental data. See help(detectFronts)."
-  msg3 <- "'x' must be a numeric array  with environmental data. See help(detectFronts)."
-  msg4 <- "'x' must a matrix, list, RasterLayer or array with environmental data See help(detectFronts)."
+  msg1 <- "'X' must be a XYZ list containing environmental map info (wheter a matrix or an array). See help(detectFronts)."
+  msg2 <- "'X' must be a numeric matrix with environmental data. See help(detectFronts)."
+  msg3 <- "'X' must be a numeric array  with environmental data. See help(detectFronts)."
+  msg4 <- "'X' must a matrix, list, RasterLayer or array with environmental data See help(detectFronts)."
 
   if(is.list(x)){
     # Check if x is a list with 'x', 'y', 'z' dimensions, where z is a numeric matrix
@@ -96,7 +96,7 @@ checkArgs_detectFronts <- function(allArgs, ...){
     control_default <- extraParams(fx = "detectFronts")
 
     # Merge two list of control params
-    allArgs$control <- modifyList(control_default$detectFronts, control)
+    allArgs$control <- modifyList(x = control_default, val = control)
   }
 
   msg1 <- "Invalid value for 'finalSmooth', it will take its default value (FALSE)."
@@ -111,10 +111,10 @@ checkArgs_detectFronts <- function(allArgs, ...){
 checkArgs_extraParams <- function(allArgs){
   fx <- allArgs$fx
 
-  msg1 <- "'fx' must be a character vector with a valid name of a grec function. See help(extraParams)."
-  validFunctions <- c("detectFronts")
-  index <- is.vector(fx) && is.character(fx) && all(is.element(fx, validFunctions))
-  if(!index){
+  msg1 <- "'fx' must be a valid grec function."
+
+  grecFx <- ls(name = "package:grec")
+  if(!is.character(fx) || length(fx) != 1 || !is.element(fx, grecFx)){
     stop(msg1)
   }
 
@@ -213,7 +213,7 @@ detectFronts_LauMedrano <- function(x, qLimits, finalSmooth, intermediate, contr
   }
 
   # Make a first smooth
-  preMatrix <- medianFilter(dataMatrix = x,
+  preMatrix <- medianFilter(X = x,
                             radius = control$firstSmooth$radius,
                             times = control$firstSmooth$times)
 
@@ -229,8 +229,8 @@ detectFronts_LauMedrano <- function(x, qLimits, finalSmooth, intermediate, contr
   sobelV <- matrix(data = sobelKernel, nrow = 3, byrow = FALSE)
 
   # Apply sobel filters (horizontal and vertical)
-  filteredH <- convolution2D(dataMatrix = preMatrix, kernel = sobelH, noNA = TRUE)
-  filteredV <- convolution2D(dataMatrix = preMatrix, kernel = sobelV, noNA = TRUE)
+  filteredH <- convolution2D(X = preMatrix, kernel = sobelH, noNA = TRUE)
+  filteredV <- convolution2D(X = preMatrix, kernel = sobelV, noNA = TRUE)
 
   if(intermediate){
     output[,,3] <- filteredH
@@ -248,7 +248,7 @@ detectFronts_LauMedrano <- function(x, qLimits, finalSmooth, intermediate, contr
 
   # Clear noisy signals
   if(isTRUE(finalSmooth)){
-    clearNoise <- medianFilter(dataMatrix = newSobel,
+    clearNoise <- medianFilter(X = newSobel,
                                radius = control$clearNoise$radius,
                                times = control$clearNoise$times)
 
@@ -272,7 +272,7 @@ detectFronts_BelkinOReilly2009 <- function(x, finalSmooth, intermediate, control
   }
 
   # Make a first smooth
-  preMatrix <- contextualMF(dataMatrix = x, inner_radius = control$firstSmooth$inner_radius,
+  preMatrix <- contextualMF(X = x, inner_radius = control$firstSmooth$inner_radius,
                             outer_radius = control$firstSmooth$outer_radius, times = control$firstSmooth$times)
 
   if(intermediate){
@@ -287,8 +287,8 @@ detectFronts_BelkinOReilly2009 <- function(x, finalSmooth, intermediate, control
   sobelV <- matrix(data = sobelKernel, nrow = 3, byrow = FALSE)
 
   # Apply sobel filters (horizontal and vertical)
-  filteredH <- convolution2D(dataMatrix = preMatrix, kernel = sobelH, noNA = TRUE)
-  filteredV <- convolution2D(dataMatrix = preMatrix, kernel = sobelV, noNA = TRUE)
+  filteredH <- convolution2D(X = preMatrix, kernel = sobelH, noNA = TRUE)
+  filteredV <- convolution2D(X = preMatrix, kernel = sobelV, noNA = TRUE)
 
   if(intermediate){
     output[,,3] <- filteredH
@@ -304,7 +304,7 @@ detectFronts_BelkinOReilly2009 <- function(x, finalSmooth, intermediate, control
 
   # Clear noisy signals
   if(isTRUE(finalSmooth)){
-    clearNoise <- medianFilter(dataMatrix = newSobel,
+    clearNoise <- medianFilter(X = newSobel,
                                radius = control$clearNoise$radius,
                                times = control$clearNoise$times)
 
@@ -321,22 +321,15 @@ detectFronts_BelkinOReilly2009 <- function(x, finalSmooth, intermediate, control
 }
 
 extraParams_internal <- function(fx){
-  output <- list()
-
-  for(i in seq_along(fx)){
-    output[[i]] <- switch(fx[i],
-                          detectFronts = list(firstSmooth = list(inner_radius = 3,
-                                                                 outer_radius = 5,
-                                                                 x = 0.5,
-                                                                 times = 1),
-                                              kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1),
-                                              sobelStrength = 1,
-                                              clearNoise = list(radius = 5,
-                                                                times = 1)),
-                          paste0("There is no extra parameters for ", fx[i], "."))
-  }
-
-  names(output) <- fx
+  output <- switch(fx,
+                   detectFronts = list(firstSmooth = list(inner_radius = 3,
+                                                          outer_radius = 5,
+                                                          times = 1),
+                                       kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1),
+                                       sobelStrength = 1,
+                                       clearNoise = list(radius = 5,
+                                                         times = 1)),
+                   paste0("There is no extra parameters for ", fx[i], "."))
 
   return(output)
 }
