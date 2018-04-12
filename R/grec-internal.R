@@ -290,6 +290,11 @@ detectFronts_BelkinOReilly2009 <- function(x, finalSmooth, intermediate, control
   filteredH <- convolution2D(X = preMatrix, kernel = sobelH, noNA = TRUE)
   filteredV <- convolution2D(X = preMatrix, kernel = sobelV, noNA = TRUE)
 
+  # Normalize values
+  normfactor <- sum(abs(sobelKernel), na.rm = TRUE)
+  filteredH <- filteredH/normfactor
+  filteredV <- filteredV/normfactor
+
   if(intermediate){
     output[,,3] <- filteredH
     output[,,4] <- filteredV
