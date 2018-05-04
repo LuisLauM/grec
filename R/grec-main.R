@@ -52,41 +52,35 @@ NULL
 #' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
 NULL
 
-#' @title Detection of fronts based on gradient recognition
+#' @title Apply gradient-based methodologies to environmental data
 #'
-#' @description This function takes a environmental map (as a numeric matrix) and allows the user to idenitify
-#' the gradients by using of sobel filters.
+#' @description This function takes a environmental map (as a numeric \code{matrix}, \code{array}, XYZ\code{list}
+#' or \code{RasterLayer}) and allows the users to apply methodologies based on gradient-searching.
 #'
 #' @rdname detectFronts
 #'
-#' @param x Main input of class \code{matrix}, \code{list}, \code{RasterLayer} or \code{array}. See 'Details.'
+#' @param x Main input of class \code{matrix}, \code{array}, XYZ \code{list} or \code{RasterLayer}. See 'Details.'
 #' @param method \code{character} string indicating the method that will be used. See 'Details'.
-#' @param finalSmooth \code{logical} indicating whether to apply a smooth to final matrix so as to remove noise.
 #' @param intermediate \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
 #' or just the final one (\code{FALSE}).
 #' @param control A \code{list} of control parameters for filter application See 'Details'.
 #' @param ... Extra arguments that will depend on the selected method.
 #'
-#' @details Inspired by the algorithm described on Belkin & O'Reilly (2009), this function performs 4 steps:
+#' @details Version 1.2.x performs one method: Belkin & O'Reilly (2009), following 4 steps:
 #' \enumerate{
-#' \item Smoothing of the original data by a median filter application.
-#' \item Application of sobel filters horizontally (sobelH) and vertically (sobelV).
-#' \item Extract gradients, using the formula \eqn{sqrt(sobelH^2 + sobelV^2)}.
-#' \item Removing noise signals using a median filter, from \code{imagine} package.
+#' \item Smoothing of the original data by applying a Contextual Median Filter.
+#' \item Apply sobel kernel horizontally (sobelH) and vertically (sobelV).
+#' \item Extract gradients using the formula \eqn{sqrt(sobelH^2 + sobelV^2)}.
 #' }
 #'
-#' \code{x} could be given as a single numeric matrix containing the values of a
-#' environmental map. Othersiwe it also can be a list with dimensions 'x', 'y' and 'z' specifying
-#' the dimensions of the data as follows: 'x' will be a numeric vector with the values of longitude,
-#' 'y' will indicate the latitude (numeric vector as well). 'grec' package is not rigorous in
-#' the check of the values given for dimensions, so the user must be carefull with them.
+#' \code{x} could be given as a single numeric matrix from an environmental map. Othersiwe it also can be set as
+#' a three dimensions list 'x', 'y' and 'z' as follows: 'x' (a vector of longitudes), 'y' (vector of latitudes) and
+#' 'z' as a matrix of dimensions \code{length(x$x)}x\code{xlength(x$y)}. You can also specify \code{x} as a
+#' \code{RasterLayer} or \code{array} object. If \code{x} is an \code{array}, it must have 3 dimensions: lon, lat
+#' and time. It is not required to specify the \code{dimnames}. The output will preserve all the attributes of input.
 #'
-#' \code{x} can be specified as a \code{RasterLayer} or \code{array} object. If \code{x} is an \code{array}, it
-#' must have 3 dimensions: lon, lat and time. It is not required to specify the \code{dimnames}. The output will
-#' preserve all the attributes and the order of input.
-#'
-#' By \code{method}, users can change the methodology used for the calculation of fronts, Belkin & O'Reilly (2009)
-#' by default.
+#' Users can change the methodology used for the calculation of gradients by \code{method}. By default it will be
+#' the Belkin & O'Reilly (2009) at v1.2.x.
 #'
 #' The control argument is a list that allows the (advanced) users modify some aspects of filter
 #' application. The parameters of \code{control} are given to functions of \code{\link{imagine}} package.
@@ -127,32 +121,10 @@ NULL
 #' # Simple application
 #' out <- detectFronts(x = exampleSSTData, finalSmooth = TRUE)
 #' image(out, col = colPalette)
-detectFronts <- function(x, method = "BelkinOReilly2009", finalSmooth = FALSE, intermediate = FALSE,
-                         control = list(), ...){
-  UseMethod(generic = "detectFronts", object = x)
-}
-
-#' @title Gets the extra parameters for \code{grec} functions
-#'
-#' @description Show as a list the extra parameters for main \code{grec} function.
-#'
-#' @param fx \code{character} vector indicating the values that will be returned.
-#'
-#' @details This function is usefull for advance users that require to modify intermediate steps in terms of
-#' filter application.
-#'
-#' @return A \code{list} with the extra parameters used by default.
-#' @export
-#'
-#' @examples
-#' # For getting all the extra parameters
-#' extraParams()
-extraParams <- function(fx = "detectFronts"){
+detectFronts <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
   # Check and validation of arguments
-  checkedArgs <- list(fx = fx)
-  checkedArgs <- checkArgs(grecArgs = checkedArgs, type = "extraParams")
+  checkedArgs <- list(x = x, method = method, intermediate = intermediate, ...)
+  checkArgs(allArgs = checkedArgs, type = class(x))
 
-  output <- with(checkedArgs, extraParams_internal(fx = fx))
-
-  return(output)
+  UseMethod(generic = "detectFronts", object = x)
 }
