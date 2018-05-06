@@ -4,7 +4,7 @@
 \name{colPalette}
 \alias{colPalette}
 \title{Default color palette most using on environmental representations.}
-\format{A vector of 2000 colors in RBG format.}
+\format{A vector of 2000 colors in RGB format.}
 \usage{
 colPalette
 }

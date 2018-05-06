@@ -40,22 +40,22 @@ or just the final one (\code{FALSE}).}
 \item{...}{Extra arguments that will depend on the selected method.}
 }
 \value{
-Depending of input class of \code{x}, the output will preserve its class.
+The output will preserve the input class (\code{matrix}, \code{array}, \code{list} or \code{RasterLayer}).
 }
 \description{
 This function takes a environmental map (as a numeric \code{matrix}, \code{array}, XYZ\code{list}
 or \code{RasterLayer}) and allows the users to apply methodologies based on gradient-searching.
 }
 \details{
-Version 1.2.x performs one method: Belkin & O'Reilly (2009), following 4 steps:
+Version 1.2.x performs one method: Belkin & O'Reilly (2009), following 3 steps:
 \enumerate{
-\item Smoothing of the original data by applying a Contextual Median Filter.
-\item Apply sobel kernel horizontally (sobelH) and vertically (sobelV).
+\item Apply a Contextual Median Filter (CMF) for smoothing the original data.
+\item Apply a convolution with sobel kernels horizontally (sobelH) and vertically (sobelV).
 \item Extract gradients using the formula \eqn{sqrt(sobelH^2 + sobelV^2)}.
 }
 
-\code{x} could be given as a single numeric matrix from an environmental map. Othersiwe it also can be set as
-a three dimensions list 'x', 'y' and 'z' as follows: 'x' (a vector of longitudes), 'y' (vector of latitudes) and
+\code{x} could be given as a single numeric \code{matrix} from an environmental map. Othersiwe it also can be set
+as a three-dimension XYZ \code{list}: 'x' (a vector of longitudes), 'y' (vector of latitudes) and
 'z' as a matrix of dimensions \code{length(x$x)}x\code{xlength(x$y)}. You can also specify \code{x} as a
 \code{RasterLayer} or \code{array} object. If \code{x} is an \code{array}, it must have 3 dimensions: lon, lat
 and time. It is not required to specify the \code{dimnames}. The output will preserve all the attributes of input.
@@ -63,17 +63,15 @@ and time. It is not required to specify the \code{dimnames}. The output will pre
 Users can change the methodology used for the calculation of gradients by \code{method}. By default it will be
 the Belkin & O'Reilly (2009) at v1.2.x.
 
-The control argument is a list that allows the (advanced) users modify some aspects of filter
-application. The parameters of \code{control} are given to functions of \code{\link{imagine}} package.
-It must be a \code{list} including the following named objects:
+\code{...} allows the (advanced) users to modify some aspects of filter application. Depending on the selected methodology,
+the available arguments will change. So, Belkin & O'Reilly (2009) brings out the following arguments to change:
+
 \describe{
-\item{\strong{firstSmooth}}{Arguments (\code{radius} and \code{times}) pased to \code{\link{medianFilter}}
-function, used for apply the smoothing to the original matrix. It must be given as a named list.}
-\item{\strong{sobelStrength}}{Number that multiplies \code{qLimits} vector. It is usefull to highlight
-the differences.}
-\item{\strong{clearNoise}}{Arguments (\code{radius} and \code{times}) pased to \code{\link{medianFilter}}
-function, used for apply the median-filter for cleaning noise and getting the output matrix. It must be
-given as a named list.}
+\item{\strong{inner_radius}}{\code{numeric}. Size (in pixels) of window for the first stage on CMF.}
+\item{\strong{outer_radius}}{\code{numeric}. Size (in pixels) of window for the second stage on CMF.}
+\item{\strong{times}}{\code{numeric}. How many times do you want to apply the CMF?}
+\item{\strong{kernelValues}}{\code{numeric}. Vector with which are going to be used in convolution to identify Vertical
+and Horizontal gradients. By default, it will be the typical Sobel kernels.}
 }
 }
 \examples{
@@ -83,16 +81,8 @@ data(sst)
 exampleSSTData <- list(x = sst$longitude,
                        y = sst$latitude,
                        z = sst$sst[,,1])
-# Simple application
+# Simple application (over a XYZ list)
 out <- detectFronts(x = exampleSSTData)
-image(out, col = colPalette)
-
-# qLimits effect
-out <- detectFronts(x = exampleSSTData, qLimits = c(0.75, 0.99))
-image(out, col = colPalette)
-
-# Simple application
-out <- detectFronts(x = exampleSSTData, finalSmooth = TRUE)
 image(out, col = colPalette)
 }
 \references{

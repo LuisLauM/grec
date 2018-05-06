@@ -10,7 +10,7 @@ detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", finalSmoot
                       y = seq(from = x@extent@ymin, to = x@extent@ymax, length.out = x@nrows),
                       z = startMatrix)
 
-  output <- detectFronts(x = startMatrix, method = method, intermediate = intermediate, ...)
+  allOuts <- detectFronts(x = startMatrix, method = method, intermediate = intermediate, ...)
 
   # Depending on 'intermediate', the output will be a single Raster or a list of them
   if(isTRUE(intermediate)){
@@ -24,7 +24,7 @@ detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", finalSmoot
     names(output) <- names(allOuts)
   }else{
     output <- x
-    output[] <- as.numeric(allOuts)
+    output[] <- as.numeric(allOuts$z)
   }
 
   return(output)
