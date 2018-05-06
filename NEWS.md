@@ -1,3 +1,10 @@
+# 1.2.0
+  - Several changes and improvments on package structure.
+  - `finalSmooth` and `control` arguments `detectFronts` were deleted.
+  - `extraParams` function were deleted. Now, available advanced arguments will be showed in help.
+  - Help document for `detectFronts` were updated.
+  - Another little corrections and improvements.
+
 # 1.1.2
   - Now, `detectFronts` function has the `method` argument, using by default the Belkin & O'Reilly (2009) algorithm.
   - Some little corrections.
