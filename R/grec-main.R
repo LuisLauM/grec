@@ -63,8 +63,7 @@ NULL
 #' @param method \code{character} string indicating the method that will be used. See 'Details'.
 #' @param intermediate \code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
 #' or just the final one (\code{FALSE}).
-#' @param control A \code{list} of control parameters for filter application See 'Details'.
-#' @param ... Extra arguments that will depend on the selected method.
+#' @param ... Extra arguments that will depend on the selected method. See Details.
 #'
 #' @details Version 1.2.x performs one method: Belkin & O'Reilly (2009), following 3 steps:
 #' \enumerate{

@@ -1,8 +1,7 @@
 #' @rdname detectFronts
 #' @method detectFronts RasterLayer
 #' @export
-detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", finalSmooth = FALSE,
-                                     intermediate = FALSE, control = list(), ...){
+detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
 
   # Extract coordinates and data for calculate fronts from Raster and convert to list
   startMatrix <- matrix(data = x@data@values, nrow = x@ncols, ncol = x@nrows)

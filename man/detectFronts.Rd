@@ -11,7 +11,7 @@
 \title{Apply gradient-based methodologies to environmental data}
 \usage{
 \method{detectFronts}{RasterLayer}(x, method = "BelkinOReilly2009",
-  finalSmooth = FALSE, intermediate = FALSE, control = list(), ...)
+  intermediate = FALSE, ...)
 
 \method{detectFronts}{array}(x, method = "BelkinOReilly2009",
   intermediate = FALSE, ...)
@@ -35,9 +35,7 @@ detectFronts(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 \item{intermediate}{\code{logical} indicating whether to get the intermediate matrices (\code{TRUE})
 or just the final one (\code{FALSE}).}
 
-\item{control}{A \code{list} of control parameters for filter application See 'Details'.}
-
-\item{...}{Extra arguments that will depend on the selected method.}
+\item{...}{Extra arguments that will depend on the selected method. See Details.}
 }
 \value{
 The output will preserve the input class (\code{matrix}, \code{array}, \code{list} or \code{RasterLayer}).
