@@ -1,6 +1,6 @@
 Package: grec
 Type: Package
-Title: An R package for GRadient-based RECognition of spatial patterns in environmental data
+Title: GRadient-Based RECognition of Spatial Patterns in Environmental Data
 Version: 1.2.0
 Date: 2018-05-06
 URL: https://github.com/LuisLauM/grec
