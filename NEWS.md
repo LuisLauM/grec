@@ -1,3 +1,8 @@
+# 1.2.1
+  - Some corrections in demos.
+  - Include a new example data set for SST: NW_USA_SST
+  - Testing normalization inside B&O method.
+
 # 1.2.0
   - Several changes and improvments on package structure.
   - `finalSmooth` and `control` arguments `detectFronts` were deleted.

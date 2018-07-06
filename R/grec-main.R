@@ -32,6 +32,16 @@ NULL
 #' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
 NULL
 
+#' @title Sea Surface Temperature Data
+#' @name NW_USA_SST
+#' @description SST map for Northwest USA, 77W-63W & 34N-45N.
+#' @aliases NW_USA_SST
+#' @docType data
+#' @usage NW_USA_SST
+#' @format A \code{list} with SST information for a single day: 2012-10-13, GHRSST, 1km.
+#' @references Download source: \url{https://podaac.jpl.nasa.gov/GHRSST}
+NULL
+
 #' @title Sea Surface Chlorophyll Data
 #' @name chl
 #' @description Surface chlorophyll maps downloaded from ERDDAP for running examples with \code{grec} functions.
