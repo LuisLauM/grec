@@ -3,14 +3,14 @@
 \docType{data}
 \name{NW_USA_SST}
 \alias{NW_USA_SST}
-\title{Sea Surface Temperature Data}
-\format{A \code{list} with SST information for a single day: 2012-10-13, GHRSST, 1km.}
+\title{Sea Surface Temperature Data for NW USA}
+\format{A \code{RasterLayer} object with SST information from Aqua MODIS source.}
 \usage{
 NW_USA_SST
 }
 \description{
-SST map for Northwest USA, 77W-63W & 34N-45N.
+SST RasterLayer map for running examples with \code{grec} functions.
 }
 \references{
-Download source: \url{https://podaac.jpl.nasa.gov/GHRSST}
+ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
 }

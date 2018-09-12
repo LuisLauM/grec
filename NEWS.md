@@ -1,4 +1,9 @@
 # 1.2.1
+  - Improvements on the way to extract matrix data from RasterLayer object.
+  - Correcting a bug when RasterLayer has not in-memory loaded data (e.g. RasterLayer gotten from read a tif file).
+  - Add documentation for NW_USA_SST data.
+  
+# 1.2.1
   - Some corrections in demos.
   - Include a new example data set for SST: NW_USA_SST
   - Testing normalization inside B&O method.

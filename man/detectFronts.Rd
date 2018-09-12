@@ -19,7 +19,8 @@
 \method{detectFronts}{default}(x, method = "BelkinOReilly2009",
   intermediate = FALSE, ...)
 
-detectFronts(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
+detectFronts(x, method = "BelkinOReilly2009", intermediate = FALSE,
+  ...)
 
 \method{detectFronts}{list}(x, method = "BelkinOReilly2009",
   intermediate = FALSE, ...)
