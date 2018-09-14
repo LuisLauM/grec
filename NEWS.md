@@ -1,4 +1,4 @@
-# 1.2.1
+# 1.2.2
   - Improvements on the way to extract matrix data from RasterLayer object.
   - Correcting a bug when RasterLayer has not in-memory loaded data (e.g. RasterLayer gotten from read a tif file).
   - Add documentation for NW_USA_SST data.

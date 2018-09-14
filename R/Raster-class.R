@@ -4,7 +4,7 @@
 detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
 
   # Extract coordinates and data for calculate fronts from Raster and convert to list
-  startMatrix <- t(as.matrix(x))
+  startMatrix <- values(x)
   startMatrix <- list(x = seq(from = x@extent@xmin, to = x@extent@xmax, length.out = x@ncols),
                       y = seq(from = x@extent@ymin, to = x@extent@ymax, length.out = x@nrows),
                       z = startMatrix)
