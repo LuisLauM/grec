@@ -12,5 +12,5 @@ colPalette
 Vector with 2000 colors generated from \code{tim.colors} function.
 }
 \references{
-\code{fields} package
+\code{tim.colors} from \strong{fields} package
 }

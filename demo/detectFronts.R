@@ -1,6 +1,5 @@
 rm(list = ls()); gc(reset = TRUE)
 # Detect fronts --------------------------------------------------------------------------
-
 # Load example data
 data(sst)
 exampleSSTData <- list(x = sst$longitude,
@@ -8,20 +7,23 @@ exampleSSTData <- list(x = sst$longitude,
                        z = sst$sst[,,1])
 
 # Apply detectFronts function
-out <- detectFronts(x = exampleSSTData)
+out <- detectFronts(x = exampleSSTData, intermediate = FALSE)
 str(out)
 
 # Make plots -----------------------------------------------------------------------------
 
+xlim <- range(exampleSSTData$x)
+ylim <- range(exampleSSTData$y)
+
 # Define axis values
-xAxis <- seq(min(out$x), max(out$x), 5)
-yAxis <- seq(min(out$y), max(out$y), 2)
+xAxis <- seq(xlim[1], xlim[2], 5)
+yAxis <- seq(ylim[1], ylim[2], 2)
 
 # Set plot parameters
-par(xaxs = "i", yaxs = "i", mar = rep(0, 4), oma = c(2, 3, 1, 3), mfrow = c(1, 2))
+par(xaxs = "i", yaxs = "i", mar = rep(0, 4), oma = c(2, 3, 1, 1), mfrow = c(1, 3))
 
 # Plot original map
-image(exampleSSTData, axes = FALSE, col = colPalette); box()
+image(exampleSSTData, axes = FALSE, col = colPalette, xlim = xlim, ylim = ylim); box()
 mtext(text = "Original", side = 3, line = -2, adj = 0.99, cex = 1.2, font = 2)
 mtext(text = "SST, Aqua MODIS, Monthly Composite\nMarch, 2010\n[85\u00b0 W - 70\u00b0 W] [20\u00b0 S - 0\u00b0 S]",
       side = 3, line = -8, adj = 0.99)
@@ -29,7 +31,14 @@ axis(side = 1, at = xAxis, labels = paste(abs(xAxis), "\u00b0W"))
 axis(side = 2, at = yAxis, labels = paste(abs(yAxis), "\u00b0S"), las = 2)
 
 # Plot gradient map
-out$z <- log10(out$z)
-image(out, axes = FALSE, col = colPalette); box()
-mtext(text = "Gradient", side = 3, line = -2, adj = 0.99, cex = 1.2, font = 2)
+image(out, axes = FALSE, col = colPalette, xlim = xlim, ylim = ylim); box()
+mtext(text = "Gradient from\nBelkin & O'Reilly (2009)", side = 3, line = -4,
+      adj = 0.99, cex = 1.2, font = 2)
+
+# Plot gradient map in logaritmic scale
+logOut <- out
+logOut$z <- log10(logOut$z)
+image(logOut, axes = FALSE, col = colPalette, xlim = xlim, ylim = ylim); box()
+mtext(text = "Gradient (log scale) from\nBelkin & O'Reilly (2009)", side = 3,
+      line = -4, adj = 0.99, cex = 1.2, font = 2)
 axis(side = 1, at = xAxis, labels = paste(abs(xAxis), "\u00b0W"))
