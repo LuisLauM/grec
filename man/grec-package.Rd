@@ -13,6 +13,6 @@ processing methods based on Gradient Recognition.
 \author{
 Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 }
-\keyword{environmental-data}
-\keyword{gradient,}
-\keyword{pattern-detection,}
+\concept{environmental-data}
+\concept{gradient}
+\concept{pattern-detection}

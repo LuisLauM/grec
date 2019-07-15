@@ -10,7 +10,9 @@
 #' processing methods based on Gradient Recognition.
 #' @aliases grec-package grec
 #' @docType package
-#' @keywords gradient, pattern-detection, environmental-data
+#' @concept gradient
+#' @concept pattern-detection
+#' @concept environmental-data
 NULL
 
 #' @title Default color palette most using on environmental representations.
@@ -62,11 +64,12 @@ NULL
 #' or just the final one (\code{FALSE}).
 #' @param ... Extra arguments that will depend on the selected method. See Details.
 #'
-#' @details Version 1.2.x performs one method: Belkin & O'Reilly (2009), following 3 steps:
+#' @details Version 1.3.x performs two methods:
 #' \enumerate{
-#' \item Apply a Contextual Median Filter (CMF) for smoothing the original data.
-#' \item Apply a convolution with sobel kernels horizontally (sobelH) and vertically (sobelV).
-#' \item Extract gradients using the formula \eqn{sqrt(sobelH^2 + sobelV^2)}.
+#' \item \code{BelkinOReilly2009} (default): Based on Belkin & O'Reilly (2009) paper, it uses a
+#' Contextual Median Filter (CMF) for smoothing the original data.
+#' \item \code{median_filter}: it uses a typical median filter (MF) for smoothing the original
+#' data. It also allows the user to change the window size for median filter (3 as default).
 #' }
 #'
 #' \code{x} could be given as a single numeric \code{matrix} from an environmental map. Othersiwe
@@ -78,18 +81,15 @@ NULL
 #' The output will preserve all the attributes of input.
 #'
 #' \code{...} allows the (advanced) users to modify some aspects of filter application. Depending
-#' on the selected methodology, the available arguments will change. So, Belkin & O'Reilly (2009)
-#' brings out the following arguments to change:
+#' on the selected methodology, some parameters can be modified:
 #'
 #' \describe{
-#' \item{\strong{inner_radius}}{\code{numeric}. Size (in pixels) of window for the first stage
-#' on CMF.}
-#' \item{\strong{outer_radius}}{\code{numeric}. Size (in pixels) of window for the second stage
-#' on CMF.}
-#' \item{\strong{times}}{\code{numeric}. How many times do you want to apply the CMF?}
+#' \item{\strong{times}}{\code{numeric}. How many times do you want to apply the method?}
 #' \item{\strong{kernelValues}}{\code{numeric}. Vector with which are going to be used in
 #' convolution to identify Vertical and Horizontal gradients. By default, it will be the typical
 #' Sobel kernels.}
+#' \item{\strong{radius}}{\code{numeric}. If median filter method was selected, it allows to change
+#' the window size of the filter.}
 #' }
 #'
 #' Finally, Belkin & O'Reilly work proposed a log transformation after the gradient calculation.
