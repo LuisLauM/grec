@@ -10,23 +10,17 @@
 \alias{detectFronts.matrix}
 \title{Apply gradient-based methodologies to environmental data}
 \usage{
-\method{detectFronts}{RasterLayer}(x, method = "BelkinOReilly2009",
-  intermediate = FALSE, ...)
+\method{detectFronts}{RasterLayer}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
-\method{detectFronts}{array}(x, method = "BelkinOReilly2009",
-  intermediate = FALSE, ...)
+\method{detectFronts}{array}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
-\method{detectFronts}{default}(x, method = "BelkinOReilly2009",
-  intermediate = FALSE, ...)
+\method{detectFronts}{default}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
-detectFronts(x, method = "BelkinOReilly2009", intermediate = FALSE,
-  ...)
+detectFronts(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
-\method{detectFronts}{list}(x, method = "BelkinOReilly2009",
-  intermediate = FALSE, ...)
+\method{detectFronts}{list}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
-\method{detectFronts}{matrix}(x, method = "BelkinOReilly2009",
-  intermediate = FALSE, ...)
+\method{detectFronts}{matrix}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 }
 \arguments{
 \item{x}{Main input of class \code{matrix}, \code{array}, XYZ \code{list} or \code{RasterLayer}.
@@ -112,7 +106,7 @@ image(exampleChlData, col = colPalette, axes = FALSE)
 mtext(text = "Original Chlorophyll", side = 3, line = -2, adj = 0.99, cex = 1.2)
 
 image(out_chl, col = colPalette, axes = FALSE)
-mtext(text = "Chlorophyll gradient\\n(log scale)", side = 3, line = -4, adj = 0.99,
+mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.99,
       cex = 1.2)
 }
 \references{

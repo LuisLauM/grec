@@ -7,7 +7,7 @@ detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", intermedia
   startMatrix <- values(x)
   startMatrix <- list(x = seq(from = x@extent@xmin, to = x@extent@xmax, length.out = x@ncols),
                       y = seq(from = x@extent@ymin, to = x@extent@ymax, length.out = x@nrows),
-                      z = startMatrix)
+                      z = matrix(data = startMatrix, nrow = x@ncols))
 
   allOuts <- detectFronts(x = startMatrix, method = method, intermediate = intermediate, ...)
 
