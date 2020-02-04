@@ -3,7 +3,11 @@
 #' @export
 detectFronts.list <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
 
-  if(isTRUE(intermediate) & class(x$z) == "array"){
+  # Check arguments
+  checkArgs_df_list(x = x)
+
+  # Apply method
+  if(isTRUE(intermediate)){
     output <- list()
 
     for(i in seq(dim(x$z)[3])){

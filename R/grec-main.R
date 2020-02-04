@@ -139,8 +139,8 @@ NULL
 #'       cex = 1.2)
 detectFronts <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
   # Check and validation of arguments
-  checkedArgs <- list(x = x, method = method, intermediate = intermediate, ...)
-  checkArgs(allArgs = checkedArgs, type = class(x))
+  checkedArgs <- list(method = method, intermediate = intermediate, ...)
+  checkArgs_prevs(allArgs = checkedArgs, type = class(x))
 
   UseMethod(generic = "detectFronts", object = x)
 }
