@@ -8,7 +8,7 @@ BugReports: https://github.com/LuisLauM/grec/issues
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"), email = "luis.laum@gmail.com"))
 Maintainer: Wencheng Lau-Medrano <luis.laum@gmail.com>
 Description: Provides algorithms for detection of spatial patterns from oceanographic data using image processing methods based on Gradient Recognition.
-License: GPL (>= 2)
+License: GPL (>= 3)
 Depends: R (>= 3.2.0), imagine (>= 1.5.2), raster
 Imports: utils
 LazyData: true
