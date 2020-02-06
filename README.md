@@ -1,7 +1,7 @@
 grec
 =======
 
-[![packageversion](https://img.shields.io/badge/Package%20version-`r version`-orange.svg?style=flat-square)](commits/master) [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/grec)](https://cran.r-project.org/package=grec) [![CRAN_time_from_release](https://www.r-pkg.org/badges/ago/grec)](https://cran.r-project.org/package=grec) [![metacran downloads](https://cranlogs.r-pkg.org/badges/grec)](https://cran.r-project.org/package=grec) [![minimal R version](https://img.shields.io/badge/R%3E%3D-`r rvers`-6666ff.svg)](https://cran.r-project.org/)
+[![packageversion](https://img.shields.io/badge/Package%20version-`1.4.1`-orange.svg?style=flat-square)](commits/master) [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/grec)](https://cran.r-project.org/package=grec) [![CRAN_time_from_release](https://www.r-pkg.org/badges/ago/grec)](https://cran.r-project.org/package=grec) [![metacran downloads](https://cranlogs.r-pkg.org/badges/grec)](https://cran.r-project.org/package=grec) [![minimal R version](https://img.shields.io/badge/R%3E%3D-`3.2.0`-6666ff.svg)](https://cran.r-project.org/)
 
 **[G]radient-based [REC]ognition of Spatial Patterns in Environmental Data**
 
