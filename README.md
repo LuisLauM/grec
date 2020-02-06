@@ -2,7 +2,7 @@ grec
 =======
 
 <!-- [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/grec)](http://cran.r-project.org/package=grec) [![](http://cranlogs.r-pkg.org/badges/grec)](http://cran.rstudio.com/web/packages/grec/index.html) -->
-**[G]adient-based [REC]ognition of Spatial Patterns in Environmental Data**
+**[G]radient-based [REC]ognition of Spatial Patterns in Environmental Data**
 
 Provides algorithms for detection of spatial patterns from oceanographic data using image processing methods based on Gradient Recognition.
 
