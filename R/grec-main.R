@@ -60,8 +60,9 @@ NULL
 #' See 'Details.'
 #' @param method \code{character} string indicating the method that will be used. See 'Details'.
 #' @param intermediate \code{logical} indicating whether to get the intermediate matrices
-#' (\code{TRUE})
-#' or just the final one (\code{FALSE}).
+#' (\code{TRUE}) or just the final one (\code{FALSE}).
+#' @param ConvolNormalization \code{logical} indicating if convolutions will make a normalization
+#' (\code{TRUE} by default). See Details.
 #' @param ... Extra arguments that will depend on the selected method. See Details.
 #'
 #' @details Version 1.3.x performs two methods:
@@ -91,6 +92,11 @@ NULL
 #' \item{\strong{radius}}{\code{numeric}. If median filter method was selected, it allows to change
 #' the window size of the filter.}
 #' }
+#'
+#' Normalization is a common practice in convolution in order to ensure that outputs are weighted
+#' within original range of values. It is achieved dividing outputs of convolution by sum(abs(kernel)).
+#' It is hardly recomended to use normalization in order to have always coherent values in regards of
+#' the original inputs; however, it can be deactivated by using \code{ConvolNormalization} argument.
 #'
 #' Finally, Belkin & O'Reilly work proposed a log transformation after the gradient calculation.
 #' However, this step has not been considered as default in the function due to its application
@@ -137,10 +143,14 @@ NULL
 #' image(out_chl, col = colPalette, axes = FALSE)
 #' mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.99,
 #'       cex = 1.2)
-detectFronts <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
-  # Check and validation of arguments
-  checkedArgs <- list(method = method, intermediate = intermediate, ...)
-  checkArgs_prevs(allArgs = checkedArgs, type = class(x))
+detectFronts <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ConvolNormalization = TRUE, ...){
+
+  checkPrevs <- list(...)$checkPrevs
+  if(is.null(checkPrevs) || checkPrevs){
+    # Check and validation of arguments
+    checkedArgs <- list(method = method, intermediate = intermediate, ConvolNormalization = ConvolNormalization, ...)
+    checkArgs_prevs(allArgs = checkedArgs, type = class(x))
+  }
 
   UseMethod(generic = "detectFronts", object = x)
 }

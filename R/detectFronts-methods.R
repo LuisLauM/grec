@@ -1,19 +1,23 @@
 
 #' @rdname detectFronts
 #' @export
-detectFronts.default <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
+detectFronts.default <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ConvolNormalization = TRUE, ...){
 
   # Decide the method
   output <- switch(method,
                    BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = x,
                                                                       intermediate = intermediate,
+                                                                      ConvNorm = ConvolNormalization,
                                                                       ...),
-                   median_filter = detectFronts_MF(x = x, intermediate = intermediate, ...))
+                   median_filter = detectFronts_MF(x = x,
+                                                   intermediate = intermediate,
+                                                   ConvNorm = ConvolNormalization,
+                                                   ...))
 
   return(output)
 }
 
-detectFronts_BelkinOReilly2009 <- function(x, intermediate, ...){
+detectFronts_BelkinOReilly2009 <- function(x, intermediate, ConvNorm, ...){
   # Create empty list for outputs
   if(intermediate){
     output <- array(data = NA, dim = c(dim(x), 5))
@@ -42,6 +46,12 @@ detectFronts_BelkinOReilly2009 <- function(x, intermediate, ...){
   filteredH <- convolution2D(X = preMatrix, kernel = sobelH)
   filteredV <- convolution2D(X = preMatrix, kernel = sobelV)
 
+  # Apply IDL normalization
+  if(ConvNorm){
+    filteredH <- filteredH/sum(abs(sobelKernel), na.rm = TRUE)
+    filteredV <- filteredV/sum(abs(sobelKernel), na.rm = TRUE)
+  }
+
   if(intermediate){
     output[,,3] <- filteredH
     output[,,4] <- filteredV
@@ -56,18 +66,31 @@ detectFronts_BelkinOReilly2009 <- function(x, intermediate, ...){
 
   # Return output
   if(intermediate){
-    dimnames(output) <- c(dimnames(x),
-                          c("original", "ContextualMedianFilter", "sobel_out_byRows", "sobel_out_byCols", "final"))
+    # Define intermediate names
+    outNames <- c("original", "ContextualMedianFilter", "sobel_out_byRows", "sobel_out_byCols", "final")
+
+    # Define names ff dimnames of x is NULL
+    if(is.null(dimnames(x))){
+      outNames <- list(NULL, NULL, outNames)
+    }else{
+      outNames <- list(dimnames(x), outNames)
+    }
+
+    # Give names to array
+    dimnames(output) <- outNames
 
     return(output)
   }else{
-    dimnames(newSobel) <- dimnames(x)
+    # If dimnames of x is not NULL, then pass these names to newSobel
+    if(!is.null(dimnames(x))){
+      dimnames(newSobel) <- dimnames(x)
+    }
 
     return(newSobel)
   }
 }
 
-detectFronts_MF <- function(x, intermediate, ...){
+detectFronts_MF <- function(x, intermediate, ConvNorm, ...){
   # Create empty list for outputs
   if(intermediate){
     output <- array(data = NA, dim = c(dim(x), 5))
@@ -97,6 +120,12 @@ detectFronts_MF <- function(x, intermediate, ...){
   filteredH <- convolution2D(X = preMatrix, kernel = sobelH)
   filteredV <- convolution2D(X = preMatrix, kernel = sobelV)
 
+  # Apply IDL normalization
+  if(ConvNorm){
+    filteredH <- filteredH/sum(abs(sobelKernel), na.rm = TRUE)
+    filteredV <- filteredV/sum(abs(sobelKernel), na.rm = TRUE)
+  }
+
   if(intermediate){
     output[,,3] <- filteredH
     output[,,4] <- filteredV
@@ -111,12 +140,25 @@ detectFronts_MF <- function(x, intermediate, ...){
 
   # Return output
   if(intermediate){
-    dimnames(output) <- c(dimnames(x),
-                          c("original", "MedianFilter", "sobel_out_byRows", "sobel_out_byCols", "final"))
+    # Define intermediate names
+    outNames <- c("original", "MedianFilter", "sobel_out_byRows", "sobel_out_byCols", "final")
+
+    # Define names ff dimnames of x is NULL
+    if(is.null(dimnames(x))){
+      outNames <- list(NULL, NULL, outNames)
+    }else{
+      outNames <- list(dimnames(x), outNames)
+    }
+
+    # Give names to array
+    dimnames(output) <- outNames
 
     return(output)
   }else{
-    dimnames(newSobel) <- dimnames(x)
+    # If dimnames of x is not NULL, then pass these names to newSobel
+    if(!is.null(dimnames(x))){
+      dimnames(newSobel) <- dimnames(x)
+    }
 
     return(newSobel)
   }

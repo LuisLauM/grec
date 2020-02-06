@@ -11,18 +11,21 @@ detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", intermedia
                       y = seq(from = x@extent@ymin, to = x@extent@ymax, length.out = x@nrows),
                       z = matrix(data = startMatrix, nrow = x@ncols))
 
-  allOuts <- detectFronts(x = startMatrix, method = method, intermediate = intermediate, ...)
+  allOuts <- detectFronts(x = startMatrix, method = method, intermediate = intermediate,
+                          checkPrevs = FALSE, ...)
 
   # Depending on 'intermediate', the output will be a single Raster or a list of them
-  if(isTRUE(intermediate)){
+  if(intermediate){
+    allSteps <- dimnames(allOuts$z)[[3]]
+
     output <- list()
-    for(i in seq_along(allOuts)){
+    for(i in seq_along(allSteps)){
       tempOut <- x
-      tempOut[] <- as.numeric(allOuts[[i]]$z)
+      tempOut[] <- as.numeric(allOuts$z[,,i])
       output[[i]] <- tempOut
     }
 
-    names(output) <- names(allOuts)
+    names(output) <- allSteps
   }else{
     output <- x
     output[] <- as.numeric(allOuts$z)

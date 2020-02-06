@@ -1,3 +1,9 @@
+# 1.3.4
+  - Improvements on the way to work with matrix, arrays, list and RasterLayer objects.
+  - Correcting some bugs regarded with methods.
+  - Include `ConvolNormalization` argument and enable normalization of convolutions as default.
+  - Add documentation of methods.
+
 # 1.2.2
   - Improvements on the way to extract matrix data from RasterLayer object.
   - Correcting a bug when RasterLayer has not in-memory loaded data (e.g. RasterLayer gotten from read a tif file).

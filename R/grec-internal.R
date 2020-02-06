@@ -57,6 +57,7 @@ checkArgs_prevs <- function(allArgs, type){
   # Define parameters
   method        <- allArgs$method
   intermediate  <- allArgs$intermediate
+  ConvolNormalization <- allArgs$ConvolNormalization
 
   # Check name of method
   methodList <- c("BelkinOReilly2009", "median_filter")
@@ -67,6 +68,11 @@ checkArgs_prevs <- function(allArgs, type){
   # Check 'intermediate'
   if(length(intermediate) != 1 || !is.logical(intermediate)){
     stop("'intermediate' must be a single logical value.")
+  }
+
+  # Check 'ConvolNormalization'
+  if(length(ConvolNormalization) != 1 || !is.logical(ConvolNormalization)){
+    stop("'ConvolNormalization' must be a single logical value.")
   }
 
   return(invisible())

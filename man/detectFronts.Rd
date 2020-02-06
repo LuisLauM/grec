@@ -14,9 +14,21 @@
 
 \method{detectFronts}{array}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
-\method{detectFronts}{default}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
+\method{detectFronts}{default}(
+  x,
+  method = "BelkinOReilly2009",
+  intermediate = FALSE,
+  ConvolNormalization = TRUE,
+  ...
+)
 
-detectFronts(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
+detectFronts(
+  x,
+  method = "BelkinOReilly2009",
+  intermediate = FALSE,
+  ConvolNormalization = TRUE,
+  ...
+)
 
 \method{detectFronts}{list}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
@@ -29,10 +41,12 @@ See 'Details.'}
 \item{method}{\code{character} string indicating the method that will be used. See 'Details'.}
 
 \item{intermediate}{\code{logical} indicating whether to get the intermediate matrices
-(\code{TRUE})
-or just the final one (\code{FALSE}).}
+(\code{TRUE}) or just the final one (\code{FALSE}).}
 
 \item{...}{Extra arguments that will depend on the selected method. See Details.}
+
+\item{ConvolNormalization}{\code{logical} indicating if convolutions will make a normalization
+(\code{TRUE} by default). See Details.}
 }
 \value{
 The output will preserve the input class (\code{matrix}, \code{array}, \code{list} or
@@ -71,6 +85,11 @@ Sobel kernels.}
 \item{\strong{radius}}{\code{numeric}. If median filter method was selected, it allows to change
 the window size of the filter.}
 }
+
+Normalization is a common practice in convolution in order to ensure that outputs are weighted
+within original range of values. It is achieved dividing outputs of convolution by sum(abs(kernel)).
+It is hardly recomended to use normalization in order to have always coherent values in regards of
+the original inputs; however, it can be deactivated by using \code{ConvolNormalization} argument.
 
 Finally, Belkin & O'Reilly work proposed a log transformation after the gradient calculation.
 However, this step has not been considered as default in the function due to its application
