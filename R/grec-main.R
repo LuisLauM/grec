@@ -6,8 +6,7 @@
 #' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 #' @name grec-package
 #' @description Provides algorithms for detection of spatial patterns from oceanographic
-#' data using image
-#' processing methods based on Gradient Recognition.
+#' data using image processing methods based on Gradient Recognition.
 #' @aliases grec-package grec
 #' @docType package
 #' @concept gradient
