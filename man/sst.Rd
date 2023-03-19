@@ -4,7 +4,9 @@
 \name{sst}
 \alias{sst}
 \title{Sea Surface Temperature Data}
-\format{A \code{list} with SST information from February to April of Aqua MODIS source.}
+\format{
+A \code{list} with SST information from February to April of Aqua MODIS source.
+}
 \usage{
 sst
 }

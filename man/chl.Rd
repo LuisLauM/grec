@@ -4,8 +4,10 @@
 \name{chl}
 \alias{chl}
 \title{Sea Surface Chlorophyll Data}
-\format{A \code{list} with chlorophyll information from February to April of Aqua MODIS
-source.}
+\format{
+A \code{list} with chlorophyll information from February to April of Aqua MODIS
+source.
+}
 \usage{
 chl
 }

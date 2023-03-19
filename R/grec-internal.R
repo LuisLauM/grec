@@ -52,6 +52,10 @@ checkArgs_df_RasterLayer <- function(x){
   return(invisible())
 }
 
+checkArgs_df_SpatRaster <- function(x){
+  return(invisible())
+}
+
 checkArgs_prevs <- function(allArgs, type){
 
   # Define parameters

@@ -1,7 +1,9 @@
 
 #' @rdname detectFronts
 #' @export
-detectFronts.default <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ConvolNormalization = TRUE, ...){
+detectFronts.default <- function(x, method = "BelkinOReilly2009",
+                                 intermediate = FALSE,
+                                 ConvolNormalization = TRUE, ...){
 
   # Decide the method
   output <- switch(method,
@@ -40,7 +42,7 @@ detectFronts_BelkinOReilly2009 <- function(x, intermediate, ConvNorm, ...){
 
   # Define sobel kernels
   sobelH <- matrix(data = sobelKernel, nrow = 3, byrow = TRUE)
-  sobelV <- matrix(data = sobelKernel, nrow = 3, byrow = FALSE)
+  sobelV <- t(sobelV)
 
   # Apply sobel filters (horizontal and verticaly)
   filteredH <- convolution2D(X = preMatrix, kernel = sobelH)

@@ -1,6 +1,7 @@
 #' @title GRadient-based RECognition of spatial patterns in environmental data
-#' @import imagine
-#' @import raster
+#' @importFrom imagine contextualMF convolution2D
+#' @importFrom terra values
+#' @importFrom raster values
 #' @importFrom utils modifyList
 #'
 #' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
