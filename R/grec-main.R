@@ -1,5 +1,5 @@
 #' @title GRadient-based RECognition of spatial patterns in environmental data
-#' @importFrom imagine contextualMF convolution2D
+#' @importFrom imagine contextualMF convolution2D medianFilter
 #' @importFrom terra values
 #' @importFrom raster values
 #' @importFrom utils modifyList
