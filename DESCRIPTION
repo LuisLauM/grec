@@ -2,7 +2,7 @@ Package: grec
 Type: Package
 Title: Gradient-Based Recognition of Spatial Patterns in Environmental Data
 Version: 1.5.0
-Date: 2023-03-17
+Date: 2023-04-23
 URL: https://github.com/LuisLauM/grec
 BugReports: https://github.com/LuisLauM/grec/issues
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"), email = "luis.laum@gmail.com"))
@@ -13,7 +13,8 @@ Depends: R (>= 3.2.0)
 Imports: utils, 
   imagine (>= 2.0.0), 
   raster,
-  terra
+  terra,
+  abind
 LazyData: true
 RoxygenNote: 7.2.3
 Encoding: UTF-8

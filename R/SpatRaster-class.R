@@ -1,35 +1,30 @@
 #' @rdname detectFronts
 #' @method detectFronts SpatRaster
 #' @export
-detectFronts.SpatRaster <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
+detectFronts.SpatRaster <- function(x, method = "BelkinOReilly2009",
+                                    intermediate = FALSE, ...){
 
   checkArgs_df_SpatRaster(x = x)
 
-  # Extract coordinates and data for calculate fronts from Raster and convert to list
-  startMatrix <- values(x)
-  startMatrix <- list(x = seq(from = x@extent@xmin, to = x@extent@xmax, length.out = x@ncols),
-                      y = seq(from = x@extent@ymin, to = x@extent@ymax, length.out = x@nrows),
-                      z = matrix(data = startMatrix, nrow = x@ncols))
+  y <- as.matrix(x = x, wide = TRUE)
 
-  allOuts <- detectFronts(x = startMatrix, method = method, intermediate = intermediate,
-                          checkPrevs = FALSE, ...)
+  if(nlyr(x) > 1){
+    index <- rep(x = seq(nlyr(x)), each = ncol(y)/nlyr(x))
 
-  # Depending on 'intermediate', the output will be a single Raster or a list of them
-  if(intermediate){
-    allSteps <- dimnames(allOuts$z)[[3]]
+    y <- lapply(seq(nlyr(x)), function(x) y[,is.element(index, x)])
 
-    output <- list()
-    for(i in seq_along(allSteps)){
-      tempOut <- x
-      tempOut[] <- as.numeric(allOuts$z[,,i])
-      output[[i]] <- tempOut
-    }
-
-    names(output) <- allSteps
-  }else{
-    output <- x
-    output[] <- as.numeric(allOuts$z)
+    y <- abind(y, along = 3)
   }
 
-  return(output)
+  y <- rast(x = detectFronts(x = y,
+                             method = method,
+                             intermediate = FALSE,
+                             checkPrevs = FALSE, ...),
+            crs = crs(x), extent = ext(x))
+
+  names(y) <- sprintf("gradient.%s.%04d", varnames(x), seq(nlyr(x)))
+  origin(y) <- origin(x)
+  varnames(y) <- sprintf("gradient of %s", varnames(x))
+
+  y
 }

@@ -1,3 +1,8 @@
+# 1.3.5
+  - Corrections in Belkin and O'Reilly method (GX and GY kernel orientation).
+  - Adding methods for `SpatRast` (from **terra** package) objects.
+  - Improving methods for `array` objects.
+
 # 1.3.4
   - Improvements on the way to work with matrix, arrays, list and RasterLayer objects.
   - Correcting some bugs regarded with methods.

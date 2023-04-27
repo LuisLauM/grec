@@ -5,14 +5,15 @@
 \alias{sst}
 \title{Sea Surface Temperature Data}
 \format{
-A \code{list} with SST information from February to April of Aqua MODIS source.
+A \code{list} with SST information from February to April of Aqua
+MODIS source.
 }
 \usage{
 sst
 }
 \description{
-SST maps downloaded from ERDDAP for running examples with \code{grec}
-functions.
+SST maps downloaded from ERDDAP for running examples with
+\code{grec} functions.
 }
 \references{
 ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}

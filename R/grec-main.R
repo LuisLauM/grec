@@ -3,6 +3,7 @@
 #' @importFrom terra values
 #' @importFrom raster values
 #' @importFrom utils modifyList
+#' @importFrom abind abind
 #'
 #' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 #' @name grec-package
