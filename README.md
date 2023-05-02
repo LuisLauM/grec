@@ -64,6 +64,12 @@ mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.9
 
 ## Versions
 
+## 1.5.0
+  - Compatibility with **imagine >= 2.0.0**.
+  - New method for SpatRast objects (from terra package).
+  - Improvements on all methods.
+  - `ConvolNormalization = FALSE` by default now in `detectFronts` function. 
+
 ### 1.3.5
   - Corrections in Belkin and O'Reilly method (GX and GY kernel orientation).
   - Adding methods for `SpatRast` (from **terra** package) objects.
