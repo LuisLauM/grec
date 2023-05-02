@@ -6,22 +6,25 @@ detectFronts.default <- function(x, method = "BelkinOReilly2009",
                                  ConvolNormalization = FALSE, ...){
 
   # Decide the method
-  output <- switch(method,
-                   BelkinOReilly2009 = detectFronts_BelkinOReilly2009(a = x,
-                                                                      intermediate = intermediate,
-                                                                      ConvNorm = ConvolNormalization,
-                                                                      ...),
-                   median_filter = detectFronts_MF(x = x,
-                                                   intermediate = intermediate,
-                                                   ConvNorm = ConvolNormalization,
-                                                   ...))
-
-  return(output)
+  switch(method,
+         BelkinOReilly2009 = df_BOR(a = x,
+                                    intermediate = intermediate,
+                                    ConvNorm = ConvolNormalization,
+                                    ...),
+         median_filter = df_MF(x = x,
+                               intermediate = intermediate,
+                               ConvNorm = ConvolNormalization,
+                               ...))
 }
 
-detectFronts_BelkinOReilly2009 <- function(a, intermediate, ConvNorm, ...){
+# Names of objects in this function follows the description of the algorithm in
+# the article of Belkin and O'Reilly
+df_BOR <- function(a, intermediate, ConvNorm, ...){
 
+  # Define default kernel values (weights)
   control_default <- list(kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1))
+
+  # Merging with extra arguments passed from ...
   extraParams <- modifyList(x = control_default, val = list(...))
 
   # Apply a smooth (Contextual Median Filter)
@@ -44,39 +47,35 @@ detectFronts_BelkinOReilly2009 <- function(a, intermediate, ConvNorm, ...){
     Gy <- Gy/sum(abs(sobelKernel), na.rm = TRUE)
   }
 
-  # Calculate gradient direction
-  if(intermediate){
-    GD <- atan(Gy/Gx)
-  }
-
   # Calculate gradient magnitude
   GM <- sqrt(Gx^2 + Gy^2)
 
   # Return output
   if(intermediate){
-
-    output <- list(original = a,
-                   CMF = A,
-                   Gx = Gx,
-                   Gy = Gy,
-                   GD = GD,
-                   GM = GM)
+    list(original = a,
+         CMF      = A,
+         Gx       = Gx,
+         Gy       = Gy,
+         GD       = atan(Gy/Gx), # Gradient direction
+         GM       = GM)          # Gradient magnitude
   }else{
-    output <- GM
+    GM
   }
-
-  output
 }
 
-detectFronts_MF <- function(x, intermediate, ConvNorm, ...){
+df_MF <- function(x, intermediate, ConvNorm, ...){
 
+  # Define default kernel values (weights), radius and times for filter application
   control_default <- list(radius = 3,
                           times = 1,
                           kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1))
+
+  # Merging with extra arguments passed from ...
   extraParams <- modifyList(x = control_default, val = list(...))
 
   # Apply a smooth (Median Filter)
-  preMatrix <- medianFilter(X = x, radius = extraParams$radius, times = extraParams$times)
+  preMatrix <- medianFilter(X = x, radius = extraParams$radius,
+                            times = extraParams$times)
 
   # Define sobel kernel values
   sobelKernel <- extraParams$kernelValues
@@ -100,15 +99,13 @@ detectFronts_MF <- function(x, intermediate, ConvNorm, ...){
 
   # Return output
   if(intermediate){
-
-    output <- list(original = x,
-                   median_filter = preMatrix,
-                   sobelV = Gx,
-                   sobelH = Gy,
-                   gradients = newSobel)
+    list(original           = x,
+         median_filter      = preMatrix,
+         filtered_v         = filteredV,
+         filtered_h         = filteredH,
+         gradient_magnitude = newSobel,
+         gradient_direction = atan(filteredH/filteredV))
   }else{
-    output <- newSobel
+    newSobel
   }
-
-  output
 }

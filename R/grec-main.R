@@ -1,9 +1,11 @@
 #' @title GRadient-based RECognition of spatial patterns in environmental data
 #' @importFrom imagine contextualMF convolution2D medianFilter
-#' @importFrom terra values
-#' @importFrom raster values
+#' @importFrom terra rast values nlyr crs ext varnames origin
+#' @importFrom raster raster values nlayers
 #' @importFrom utils modifyList
 #' @importFrom abind abind
+#' @importMethodsFrom terra as.matrix varnames<- origin<- ext<-
+#' @importMethodsFrom raster "["
 #'
 #' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 #' @name grec-package
@@ -66,12 +68,18 @@ NULL
 #' @param intermediate \code{logical} indicating whether to get the intermediate
 #' matrices (\code{TRUE}) or just the final one (\code{FALSE}).
 #' @param ConvolNormalization \code{logical} indicating if convolutions will
-#' perform a previous normalization (\code{TRUE} by default). See Details.
+#' perform a previous normalization (\code{FALSE} by default). See Details.
 #' @param ... Extra arguments that will depend on the selected method. See
 #' Details.
 #'
-#' @details \strong{grec} works in joint to \strong{imagine} package in order to performs and apply image processing algorithms for the identification of oceanic fronts. \strong{imagine} provides the basic algorithms developed in a efficient way (for instance, using C++ tools). On the other hand, grec is in charge of managing the use of this coding tools in the context of oceanic gradient recognition, dealing with the developing of input/output methods, units, scales, etc. In that regard, the available methods that grec offers will depend the versions of grec-imagine installed.
-#'
+#' @details \strong{grec} works in joint to \strong{imagine} package in order to
+#' perform and apply image processing algorithms for the identification of
+#' oceanic fronts. \strong{imagine} provides the basic algorithms developed in a
+#' efficient way (using C++ tools). On the other hand, \strong{grec} is in
+#' charge of managing the use of this coding tools in the context of oceanic
+#' gradient recognition and dealing with the developing of input/output methods.
+#' In that regard, the available methods that \strong{grec} offer will depend
+#' the versions of installed \strong{grec-imagine}.
 #'
 #' \code{RasterLayer}*: As the news of \strong{raster} package will no longer
 #' available, \code{RasterLayer} will not longer supported in future versions of
@@ -103,29 +111,28 @@ NULL
 #'
 #' \describe{
 #' \item{\strong{times}}{\code{numeric}. How many times do you want to apply
-#' the method?}
+#' the filtering method?}
 #' \item{\strong{kernelValues}}{\code{numeric}. Vector with which are going to
-#' be used in convolution to identify Vertical and Horizontal gradients. By
-#' default, it will be the typical Sobel kernels.}
+#' be used in convolution to identify Vertical and Horizontal gradients.}
 #' \item{\strong{radius}}{\code{numeric}. If median filter method was selected,
 #' it allows to change the window size of the filter.}
 #' }
 #'
 #' Normalization is a common practice in convolution in order to ensure that
 #' outputs are weighted within original range of values. It is achieved dividing
-#' outputs of convolution by sum(abs(kernel)). It is hardly recomended to use
-#' normalization in order to have always coherent values in regards of the
-#' original inputs; however, it can be deactivated by setting
-#' \code{ConvolNormalization = FALSE}.
+#' outputs of convolution by \code{sum(abs(kernel))}. It is hardly recomended to
+#' use normalization in order to have always coherent values in regards of the
+#' original inputs; however, it is deactivated by default and user can swith it
+#' on by setting \code{ConvolNormalization = TRUE}.
 #'
 #' Finally, Belkin & O'Reilly work proposed a log transformation after the
 #' gradient calculation. This step has NOT been considered as default
 #' in the function due to its application is focused on Chlorophyll values,
-#' so the user must decide to apply it or not manually.
+#' so the user must decide to apply it or not manually before.
 #'
 #' @references Belkin, I. M., & O'Reilly, J. E. (2009). An algorithm for oceanic
 #' front detection in chlorophyll and SST satellite imagery. Journal of Marine
-#' Systems, 78(3), 319-326 (\url{http://dx.doi.org/10.1016/j.jmarsys.2008.11.018}).
+#' Systems, 78(3), 319-326 (\doi{10.1016/j.jmarsys.2008.11.018}).
 #'
 #' @return The output will preserve the input class (\code{matrix}, \code{array},
 #' \code{list} or \code{RasterLayer}).
@@ -165,12 +172,13 @@ NULL
 #' mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.99,
 #'       cex = 1.2)
 detectFronts <- function(x, method = "BelkinOReilly2009", intermediate = FALSE,
-                         ConvolNormalization = TRUE, ...){
+                         ConvolNormalization = FALSE, ...){
 
   checkPrevs <- list(...)$checkPrevs
   if(is.null(checkPrevs) || checkPrevs){
     # Check and validation of arguments
-    checkedArgs <- list(method = method, intermediate = intermediate, ConvolNormalization = ConvolNormalization, ...)
+    checkedArgs <- list(method = method, intermediate = intermediate,
+                        ConvolNormalization = ConvolNormalization, ...)
     checkArgs_prevs(allArgs = checkedArgs, type = class(x))
   }
 

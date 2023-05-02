@@ -1,7 +1,8 @@
 #' @rdname detectFronts
 #' @method detectFronts RasterLayer
 #' @export
-detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ...){
+detectFronts.RasterLayer <- function(x, method = "BelkinOReilly2009",
+                                     intermediate = FALSE, ...){
 
   checkArgs_df_RasterLayer(x = x)
 

@@ -1,7 +1,10 @@
 # 1.3.5
   - Corrections in Belkin and O'Reilly method (GX and GY kernel orientation).
   - Adding methods for `SpatRast` (from **terra** package) objects.
+  - Support for **Raster-** objects will be retired since next versions of **grec**.
   - Improving methods for `array` objects.
+  - `ConvolNormalization` argument is now set as `FALSE` by default in `detectFronts` function.
+  - Minor corrections and improvements in efficiency.
 
 # 1.3.4
   - Improvements on the way to work with matrix, arrays, list and RasterLayer objects.
