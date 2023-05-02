@@ -6,8 +6,9 @@
 \alias{grec}
 \title{GRadient-based RECognition of spatial patterns in environmental data}
 \description{
-Provides algorithms for detection of spatial patterns from oceanographic
-data using image processing methods based on Gradient Recognition.
+Provides algorithms for detecting spatial patterns from 2-D
+oceanographic data using image processing methods based on Gradient
+Recognition.
 }
 \author{
 Wencheng Lau-Medrano, \email{luis.laum@gmail.com}

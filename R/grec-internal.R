@@ -49,6 +49,19 @@ checkArgs_df_list <- function(x){
 }
 
 checkArgs_df_RasterLayer <- function(x){
+
+  if(nlayers(x) < 1){
+    stop("RasterLayer object must have at least 1 layer.")
+  }
+  return(invisible())
+}
+
+checkArgs_df_SpatRaster <- function(x){
+
+  if(nlyr(x) < 1){
+    stop("SpatRaster object must have at least 1 layer.")
+  }
+
   return(invisible())
 }
 

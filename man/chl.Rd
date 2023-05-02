@@ -4,14 +4,16 @@
 \name{chl}
 \alias{chl}
 \title{Sea Surface Chlorophyll Data}
-\format{A \code{list} with chlorophyll information from February to April of Aqua MODIS
-source.}
+\format{
+A \code{list} with chlorophyll information from February to April of
+Aqua MODIS source.
+}
 \usage{
 chl
 }
 \description{
-Surface chlorophyll maps downloaded from ERDDAP for running examples with
-\code{grec} functions.
+Surface chlorophyll maps downloaded from ERDDAP for running
+examples with \code{grec} functions.
 }
 \references{
 ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}

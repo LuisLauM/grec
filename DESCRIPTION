@@ -1,16 +1,20 @@
 Package: grec
 Type: Package
 Title: Gradient-Based Recognition of Spatial Patterns in Environmental Data
-Version: 1.4.1
-Date: 2020-02-06
+Version: 1.5.0
+Date: 2023-04-28
 URL: https://github.com/LuisLauM/grec
 BugReports: https://github.com/LuisLauM/grec/issues
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"), email = "luis.laum@gmail.com"))
 Maintainer: Wencheng Lau-Medrano <luis.laum@gmail.com>
 Description: Provides algorithms for detection of spatial patterns from oceanographic data using image processing methods based on Gradient Recognition.
 License: GPL (>= 3)
-Depends: R (>= 3.2.0), imagine (>= 1.5.2), raster
-Imports: utils
+Depends: R (>= 3.2.0)
+Imports: utils, 
+  imagine (>= 2.0.0), 
+  raster,
+  terra,
+  abind
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.2.3
 Encoding: UTF-8

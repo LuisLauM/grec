@@ -1,165 +1,111 @@
 
 #' @rdname detectFronts
 #' @export
-detectFronts.default <- function(x, method = "BelkinOReilly2009", intermediate = FALSE, ConvolNormalization = TRUE, ...){
+detectFronts.default <- function(x, method = "BelkinOReilly2009",
+                                 intermediate = FALSE,
+                                 ConvolNormalization = FALSE, ...){
 
   # Decide the method
-  output <- switch(method,
-                   BelkinOReilly2009 = detectFronts_BelkinOReilly2009(x = x,
-                                                                      intermediate = intermediate,
-                                                                      ConvNorm = ConvolNormalization,
-                                                                      ...),
-                   median_filter = detectFronts_MF(x = x,
-                                                   intermediate = intermediate,
-                                                   ConvNorm = ConvolNormalization,
-                                                   ...))
-
-  return(output)
+  switch(method,
+         BelkinOReilly2009 = df_BOR(a = x,
+                                    intermediate = intermediate,
+                                    ConvNorm = ConvolNormalization,
+                                    ...),
+         median_filter = df_MF(x = x,
+                               intermediate = intermediate,
+                               ConvNorm = ConvolNormalization,
+                               ...))
 }
 
-detectFronts_BelkinOReilly2009 <- function(x, intermediate, ConvNorm, ...){
-  # Create empty list for outputs
-  if(intermediate){
-    output <- array(data = NA, dim = c(dim(x), 5))
-    output[,,1] <- x
-  }
+# Names of objects in this function follows the description of the algorithm in
+# the article of Belkin and O'Reilly
+df_BOR <- function(a, intermediate, ConvNorm, ...){
 
-  control_default <- list(times = 1,
-                          kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1))
+  # Define default kernel values (weights)
+  control_default <- list(kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1))
+
+  # Merging with extra arguments passed from ...
   extraParams <- modifyList(x = control_default, val = list(...))
 
   # Apply a smooth (Contextual Median Filter)
-  preMatrix <- contextualMF(X = x, times = extraParams$times)
-
-  if(intermediate){
-    output[,,2] <- preMatrix
-  }
+  A <- contextualMF(X = a)
 
   # Define sobel kernel values
   sobelKernel <- extraParams$kernelValues
 
   # Define sobel kernels
-  sobelH <- matrix(data = sobelKernel, nrow = 3, byrow = TRUE)
-  sobelV <- matrix(data = sobelKernel, nrow = 3, byrow = FALSE)
+  GX <- matrix(data = sobelKernel, nrow = 3)
+  GY <- apply(t(GX), 2, rev) # GX rotated 90 deg counter-clockwise
 
   # Apply sobel filters (horizontal and verticaly)
-  filteredH <- convolution2D(X = preMatrix, kernel = sobelH)
-  filteredV <- convolution2D(X = preMatrix, kernel = sobelV)
+  Gx <- convolution2D(X = A, kernel = GX)
+  Gy <- convolution2D(X = A, kernel = GY)
 
   # Apply IDL normalization
   if(ConvNorm){
-    filteredH <- filteredH/sum(abs(sobelKernel), na.rm = TRUE)
-    filteredV <- filteredV/sum(abs(sobelKernel), na.rm = TRUE)
+    Gx <- Gx/sum(abs(sobelKernel), na.rm = TRUE)
+    Gy <- Gy/sum(abs(sobelKernel), na.rm = TRUE)
   }
 
-  if(intermediate){
-    output[,,3] <- filteredH
-    output[,,4] <- filteredV
-  }
-
-  # Calculate gradient
-  newSobel <- sqrt(filteredH^2 + filteredV^2)
-
-  if(intermediate){
-    output[,,5] <- newSobel
-  }
+  # Calculate gradient magnitude
+  GM <- sqrt(Gx^2 + Gy^2)
 
   # Return output
   if(intermediate){
-    # Define intermediate names
-    outNames <- c("original", "ContextualMedianFilter", "sobel_out_byRows", "sobel_out_byCols", "final")
-
-    # Define names ff dimnames of x is NULL
-    if(is.null(dimnames(x))){
-      outNames <- list(NULL, NULL, outNames)
-    }else{
-      outNames <- list(dimnames(x), outNames)
-    }
-
-    # Give names to array
-    dimnames(output) <- outNames
-
-    return(output)
+    list(original = a,
+         CMF      = A,
+         Gx       = Gx,
+         Gy       = Gy,
+         GD       = atan(Gy/Gx), # Gradient direction
+         GM       = GM)          # Gradient magnitude
   }else{
-    # If dimnames of x is not NULL, then pass these names to newSobel
-    if(!is.null(dimnames(x))){
-      dimnames(newSobel) <- dimnames(x)
-    }
-
-    return(newSobel)
+    GM
   }
 }
 
-detectFronts_MF <- function(x, intermediate, ConvNorm, ...){
-  # Create empty list for outputs
-  if(intermediate){
-    output <- array(data = NA, dim = c(dim(x), 5))
-    output[,,1] <- x
-  }
+df_MF <- function(x, intermediate, ConvNorm, ...){
 
+  # Define default kernel values (weights), radius and times for filter application
   control_default <- list(radius = 3,
                           times = 1,
                           kernelValues = c(-1, -2, -1, 0, 0, 0, 1, 2, 1))
+
+  # Merging with extra arguments passed from ...
   extraParams <- modifyList(x = control_default, val = list(...))
 
   # Apply a smooth (Median Filter)
-  preMatrix <- medianFilter(X = x, radius = extraParams$radius, times = extraParams$times)
-
-  if(intermediate){
-    output[,,2] <- preMatrix
-  }
+  preMatrix <- medianFilter(X = x, radius = extraParams$radius,
+                            times = extraParams$times)
 
   # Define sobel kernel values
   sobelKernel <- extraParams$kernelValues
 
   # Define sobel kernels
-  sobelH <- matrix(data = sobelKernel, nrow = 3, byrow = TRUE)
-  sobelV <- matrix(data = sobelKernel, nrow = 3, byrow = FALSE)
+  sobelV <- matrix(data = sobelKernel, nrow = 3)
+  sobelH <- apply(t(sobelV), 2, rev) # sobelV rotated 90 deg counter-clockwise
 
   # Apply sobel filters (horizontal and verticaly)
-  filteredH <- convolution2D(X = preMatrix, kernel = sobelH)
   filteredV <- convolution2D(X = preMatrix, kernel = sobelV)
+  filteredH <- convolution2D(X = preMatrix, kernel = sobelH)
 
   # Apply IDL normalization
   if(ConvNorm){
-    filteredH <- filteredH/sum(abs(sobelKernel), na.rm = TRUE)
     filteredV <- filteredV/sum(abs(sobelKernel), na.rm = TRUE)
-  }
-
-  if(intermediate){
-    output[,,3] <- filteredH
-    output[,,4] <- filteredV
+    filteredH <- filteredH/sum(abs(sobelKernel), na.rm = TRUE)
   }
 
   # Calculate gradient
-  newSobel <- sqrt(filteredH^2 + filteredV^2)
-
-  if(intermediate){
-    output[,,5] <- newSobel
-  }
+  newSobel <- sqrt(filteredV^2 + filteredH^2)
 
   # Return output
   if(intermediate){
-    # Define intermediate names
-    outNames <- c("original", "MedianFilter", "sobel_out_byRows", "sobel_out_byCols", "final")
-
-    # Define names ff dimnames of x is NULL
-    if(is.null(dimnames(x))){
-      outNames <- list(NULL, NULL, outNames)
-    }else{
-      outNames <- list(dimnames(x), outNames)
-    }
-
-    # Give names to array
-    dimnames(output) <- outNames
-
-    return(output)
+    list(original           = x,
+         median_filter      = preMatrix,
+         filtered_v         = filteredV,
+         filtered_h         = filteredH,
+         gradient_magnitude = newSobel,
+         gradient_direction = atan(filteredH/filteredV))
   }else{
-    # If dimnames of x is not NULL, then pass these names to newSobel
-    if(!is.null(dimnames(x))){
-      dimnames(newSobel) <- dimnames(x)
-    }
-
-    return(newSobel)
+    newSobel
   }
 }
