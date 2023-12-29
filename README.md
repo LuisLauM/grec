@@ -24,7 +24,7 @@ install.packages("grec")
 
 ## Examples
 
-Next, we show an example of the use of `detectFronts` function:
+Next, we show an example of the use of `getGradients` function:
 
 ``` r
 require(grec)
@@ -40,8 +40,8 @@ exampleChlData <- list(x = chl$longitude,
                        z = chl$chlorophyll[,,1])
 
 # Simple application (over a XYZ list)
-out_sst <- detectFronts(x = exampleSSTData)
-out_chl <- detectFronts(x = exampleChlData)
+out_sst <- getGradients(x = exampleSSTData)
+out_chl <- getGradients(x = exampleChlData)
 
 # External transformation for chl data
 out_chl$z <- log10(out_chl$z)
@@ -63,6 +63,11 @@ mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.9
 ```
 
 ## Versions
+
+## 1.6.0
+  - We are changing the name of the `detectFronts` function to `getGradients`. However, for backwards compatibility, `detectFronts` will still be available until v2.0.0.
+  - Adding new methods for `getGradients`: Agenbag-1 and Agenbag-2.
+  - Some minor improvements in documentation and code.
 
 ## 1.5.0
   - Compatibility with **imagine >= 2.0.0**.

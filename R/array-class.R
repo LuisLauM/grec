@@ -1,14 +1,14 @@
-#' @rdname detectFronts
-#' @method detectFronts array
+#' @rdname getGradients
+#' @method getGradients array
 #' @export
-detectFronts.array <- function(x, method = "BelkinOReilly2009",
+getGradients.array <- function(x, method = "BelkinOReilly2009",
                                intermediate = FALSE, ...){
 
   # Check arguments
   checkArgs_df_array(x = x)
 
   output <- lapply(X = seq(dim(x)[3]),
-                   FUN = function(i, ...) detectFronts(x = x[,,i], ...),
+                   FUN = function(i, ...) getGradients(x = x[,,i], ...),
                    method = method, intermediate = intermediate,
                    checkPrevs = FALSE, ...)
 

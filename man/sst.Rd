@@ -18,3 +18,4 @@ SST maps downloaded from ERDDAP for running examples with
 \references{
 ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
 }
+\keyword{datasets}

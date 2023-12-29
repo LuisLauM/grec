@@ -18,3 +18,4 @@ examples with \code{grec} functions.
 \references{
 ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
 }
+\keyword{datasets}

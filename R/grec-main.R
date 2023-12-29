@@ -1,67 +1,41 @@
-#' @title GRadient-based RECognition of spatial patterns in environmental data
-#' @importFrom imagine contextualMF convolution2D medianFilter
-#' @importFrom terra rast values nlyr crs ext varnames origin
-#' @importFrom raster raster values nlayers
-#' @importFrom utils modifyList
-#' @importFrom abind abind
-#' @importMethodsFrom terra as.matrix varnames<- origin<- ext<-
-#' @importMethodsFrom raster "["
-#'
-#' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
-#' @name grec-package
-#' @description Provides algorithms for detecting spatial patterns from 2-D
-#' oceanographic data using image processing methods based on Gradient
-#' Recognition.
-#' @aliases grec-package grec
-#' @docType package
-#' @concept gradient
-#' @concept pattern-detection
-#' @concept environmental-data
-NULL
-
 #' @title Default color palette most using on environmental representations.
-#' @name colPalette
 #' @description Vector with 2000 colors generated from \code{tim.colors} function.
-#' @aliases colPalette
 #' @docType data
 #' @usage colPalette
 #' @format A vector of 2000 colors in RGB format.
 #' @references \code{tim.colors} from \strong{fields} package
-NULL
+"colPalette"
 
 #' @title Sea Surface Temperature Data
-#' @name sst
 #' @description SST maps downloaded from ERDDAP for running examples with
 #' \code{grec} functions.
-#' @aliases sst
 #' @docType data
 #' @usage sst
 #' @format A \code{list} with SST information from February to April of Aqua
 #' MODIS source.
 #' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
-NULL
+"sst"
 
 #' @title Sea Surface Chlorophyll Data
-#' @name chl
 #' @description Surface chlorophyll maps downloaded from ERDDAP for running
 #' examples with \code{grec} functions.
-#' @aliases chl
 #' @docType data
 #' @usage chl
 #' @format A \code{list} with chlorophyll information from February to April of
 #' Aqua MODIS source.
 #' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
-NULL
+"chl"
 
 #' @title Apply gradient-based methodologies to environmental data
 #'
-#' @description This function takes a numeric \code{matrix}, \code{array},
-#' XYZ-\code{list}, \code{SpatRaster} or \code{RasterLayer}* and allows
-#' the users to apply methodologies based on gradient-searching.
+#' @description This function empowers users to analyze data from various sources,
+#' including numeric \code{matrix}, \code{array}s, XYZ-\code{list}s,
+#' \code{SpatRaster}s, or \code{RasterLayer}s*, by applying gradient-seeking
+#' methodologies.
 #'
-#' @rdname detectFronts
+#' @rdname getGradients
 #'
-#' @param x Main input of class \code{matrix}, \code{array}, XYZ \code{list},
+#' @param x An object of class \code{matrix}, \code{array}, XYZ \code{list},
 #' \code{SpatRaster} or \code{RasterLayer}*. See 'Details.'
 #' @param method \code{character} string indicating the method that will be used.
 #' For the available methods, see 'Details'.
@@ -72,21 +46,23 @@ NULL
 #' @param ... Extra arguments that will depend on the selected method. See
 #' Details.
 #'
-#' @details \strong{grec} works in joint to \strong{imagine} package in order to
-#' perform and apply image processing algorithms for the identification of
-#' oceanic fronts. \strong{imagine} provides the basic algorithms developed in a
-#' efficient way (using C++ tools). On the other hand, \strong{grec} is in
-#' charge of managing the use of this coding tools in the context of oceanic
-#' gradient recognition and dealing with the developing of input/output methods.
-#' In that regard, the available methods that \strong{grec} offer will depend
-#' the versions of installed \strong{grec-imagine}.
+#' @details
+#' The \pkg{grec} package collaborates with the \pkg{imagine} package to execute
+#' and apply image processing algorithms for identifying oceanic gradients.
+#' \pkg{imagine} furnishes the foundational algorithms, developed efficiently
+#' utilizing C++ tools. Conversely, \pkg{grec} oversees the utilization of these
+#' coding instruments in the context of oceanic gradient recognition and handles
+#' the development of input/output methods. In this context, the available methods
+#' offered by \pkg{grec} are contingent on the installed \pkg{grec}-\pkg{imagine}
+#' versions.
 #'
-#' \code{RasterLayer}*: As the news of \strong{raster} package will no longer
-#' available, \code{RasterLayer} will not longer supported in future versions of
-#' \code{grec}. On the other hand, methods for \code{SpatRaster} will started to
-#' be avavilable since v.1.5.0.
+#' (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
+#' supporting the use of \code{RasterLayer} in future versions. Instead,
+#' \pkg{grec} will be incorporating support for \link[terra]{SpatRaster-class},
+#' a more recent and actively developed method for working with raster data.
+#' This change will take effect as soon as \pkg{raster} is removed from CRAN.
 #'
-#' Until the current version, \code{grec} performs two methods:
+#' Until the current version, \code{grec} performs four methods:
 #' \enumerate{
 #' \item \code{BelkinOReilly2009} (default): Based on Belkin & O'Reilly (2009)
 #' article, it uses a Contextual Median Filter (CMF) for smoothing the original
@@ -94,16 +70,25 @@ NULL
 #' \item \code{median_filter}: it uses a typical median filter (MF) for
 #' smoothing the original data. It also allows the user to change the window
 #' size for median filter (3 as default).
+#' \item \code{Agenbag2003-1}: Performs method 1 described on Agenbag et al.
+#' (2003) paper, based on the equation:
+#' \deqn{SST_{grad}=\sqrt{(T_{i+1}-T_{i-1})^2 +(T_{j+1}-T_{j-1})^2}}
+#' \item \code{Agenbag2003-2}: Performs method 2 described on Agenbag et al.
+#' (2003) paper, calculating the the standard deviation of the 3x3 neighbor area
+#' for each pixel.
 #' }
 #'
-#' \code{x} could be given as a single numeric \code{matrix} from an
-#' environmental map. Othersiwe it also can be set as a three-dimension XYZ
-#' \code{list}: 'x' (a vector of longitudes), 'y' (vector of latitudes) and 'z'
-#' as a matrix of dimensions \code{length(x$x)}x\code{xlength(x$y)}. You can
-#' also specify \code{x} as an \code{array}, \code{SpatRaster} or
-#' \code{RasterLayer}* object. If \code{x} is an \code{array}, it must be of 3
-#' dimensions: lon, lat and time. It is not required to specify the
-#' \code{dimnames}. The output will preserve all the attributes of input.
+#' The input data \code{x} can be represented in various formats to accommodate
+#' different data sources. It can be provided as a single numeric \code{matrix}
+#' extracted from an environmental map. Alternatively, it can be represented as
+#' a three-dimensional XYZ \code{list}, where \code{X} contains a vector of
+#' longitudes, \code{Y} contains a vector of latitudes, and \code{Z} is a matrix
+#' of dimensions \code{length(x$X)} x \code{length(x$Y)}. Additionally, it can
+#' be specified as an array, \code{SpatRaster}, or \code{RasterLayer}* object.
+#' If \code{x} is an \code{array}, it must have three dimensions: longitude (lon),
+#' latitude (lat), and time. It is not mandatory to define the dimnames. The
+#' output will maintain all the attributes of the input data.
+#'
 #'
 #' \code{...} allows the (advanced) users to modify some aspects of filter
 #' application. Depending on the selected methodology, some parameters can be
@@ -112,30 +97,37 @@ NULL
 #' \describe{
 #' \item{\strong{times}}{\code{numeric}. How many times do you want to apply
 #' the filtering method?}
-#' \item{\strong{kernelValues}}{\code{numeric}. Vector with which are going to
-#' be used in convolution to identify Vertical and Horizontal gradients.}
-#' \item{\strong{radius}}{\code{numeric}. If median filter method was selected,
-#' it allows to change the window size of the filter.}
+#' \item{\strong{kernelValues}}{A \code{numeric} vector that will be used for
+#' convolution to detect vertical and horizontal gradients.}
+#' \item{\strong{radius}}{\code{numeric}. If \strong{median-filter} method was
+#' selected, it allows to change the window size of the filter.}
 #' }
 #'
-#' Normalization is a common practice in convolution in order to ensure that
-#' outputs are weighted within original range of values. It is achieved dividing
-#' outputs of convolution by \code{sum(abs(kernel))}. It is hardly recomended to
-#' use normalization in order to have always coherent values in regards of the
-#' original inputs; however, it is deactivated by default and user can swith it
-#' on by setting \code{ConvolNormalization = TRUE}.
+#' Normalization is a standard practice in convolution to maintain the range of
+#' output values consistent with the input data. This is achieved by dividing
+#' the convolution output by the absolute value of the kernel. While
+#' normalization is recommended to ensure consistent interpretation of results,
+#' it is disabled by default and can be enabled by setting the
+#' \code{ConvolNormalization} parameter to \code{TRUE}.
 #'
-#' Finally, Belkin & O'Reilly work proposed a log transformation after the
-#' gradient calculation. This step has NOT been considered as default
-#' in the function due to its application is focused on Chlorophyll values,
-#' so the user must decide to apply it or not manually before.
+#' Finally, Belkin & O'Reilly's work suggests applying a logarithmic
+#' transformation to the gradient output. This step is not enabled by default,
+#' as it is primarily intended for chlorophyll data. Users are free to apply the
+#' transformation manually if it suits their specific needs.
 #'
-#' @references Belkin, I. M., & O'Reilly, J. E. (2009). An algorithm for oceanic
+#'
+#' @references
+#' Belkin, I. M., & O'Reilly, J. E. (2009). An algorithm for oceanic
 #' front detection in chlorophyll and SST satellite imagery. Journal of Marine
 #' Systems, 78(3), 319-326 (\doi{10.1016/j.jmarsys.2008.11.018}).
 #'
-#' @return The output will preserve the input class (\code{matrix}, \code{array},
-#' \code{list} or \code{RasterLayer}).
+#' Agenbag, J.J., A.J. Richardson, H. Demarcq, P. Freon, S. Weeks,
+#' and F.A. Shillington. "Estimating Environmental Preferences of South African
+#' Pelagic Fish Species Using Catch Size- and Remote Sensing Data". Progress in
+#' Oceanography 59, No 2-3 (October 2003): 275-300.
+#' (\doi{https://doi.org/10.1016/j.pocean.2003.07.004}).
+#'
+#' @return The output will preserve the input class.
 #'
 #' @export
 #'
@@ -151,8 +143,8 @@ NULL
 #'                        z = chl$chlorophyll[,,1])
 #'
 #' # Simple application (over a XYZ list)
-#' out_sst <- detectFronts(x = exampleSSTData)
-#' out_chl <- detectFronts(x = exampleChlData)
+#' out_sst <- getGradients(x = exampleSSTData)
+#' out_chl <- getGradients(x = exampleChlData)
 #'
 #' # External transformation for chl data
 #' out_chl$z <- log10(out_chl$z)
@@ -171,16 +163,29 @@ NULL
 #' image(out_chl, col = colPalette, axes = FALSE)
 #' mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.99,
 #'       cex = 1.2)
-detectFronts <- function(x, method = "BelkinOReilly2009", intermediate = FALSE,
+getGradients <- function(x,
+                         method = c("BelkinOReilly2009", "median_filter",
+                                    "Agenbag2003-1", "Agenbag2003-2"),
+                         intermediate = FALSE,
                          ConvolNormalization = FALSE, ...){
 
   checkPrevs <- list(...)$checkPrevs
   if(is.null(checkPrevs) || checkPrevs){
     # Check and validation of arguments
-    checkedArgs <- list(method = method, intermediate = intermediate,
+    checkedArgs <- list(method = method[1],
+                        intermediate = intermediate,
                         ConvolNormalization = ConvolNormalization, ...)
     checkArgs_prevs(allArgs = checkedArgs, type = class(x))
   }
 
-  UseMethod(generic = "detectFronts", object = x)
+  UseMethod(generic = "getGradients", object = x)
+}
+
+#' @export
+#' @rdname getGradients
+detectFronts <- function(...){
+
+  deprecate_soft(when = "1.6.0", what = "detectFronts()", with = "getGradients()")
+
+  getGradients(...)
 }

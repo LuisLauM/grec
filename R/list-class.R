@@ -1,14 +1,14 @@
-#' @rdname detectFronts
-#' @method detectFronts list
+#' @rdname getGradients
+#' @method getGradients list
 #' @export
-detectFronts.list <- function(x, method = "BelkinOReilly2009",
+getGradients.list <- function(x, method = "BelkinOReilly2009",
                               intermediate = FALSE, ...){
 
   # Check arguments
   checkArgs_df_list(x = x)
 
   # Apply method
-  x$z <- detectFronts(x = x$z, method = method, intermediate = intermediate,
+  x$z <- getGradients(x = x$z, method = method, intermediate = intermediate,
                       checkPrevs = FALSE, ...)
 
   x

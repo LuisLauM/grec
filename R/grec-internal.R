@@ -1,6 +1,6 @@
 checkArgs_df_matrix <- function(x){
   # Error messages
-  msg1 <- "'x' must be a numeric matrix with environmental data. See help(detectFronts)."
+  msg1 <- "'x' must be a numeric matrix with environmental data. See help(getGradients)."
   msg2 <- "There is not any valid values for 'x'"
 
   # Check if x is a valid numerical matrix
@@ -13,12 +13,12 @@ checkArgs_df_matrix <- function(x){
     stop(msg2)
   }
 
-  return(invisible())
+  invisible()
 }
 
 checkArgs_df_array <- function(x){
   # Error messages
-  msg1 <- "'x' must be a numeric array with environmental data. See help(detectFronts)."
+  msg1 <- "'x' must be a numeric array with environmental data. See help(getGradients)."
   msg2 <- "There is not any valid values for 'x'"
 
   # Check if x is a valid numerical matrix
@@ -31,12 +31,12 @@ checkArgs_df_array <- function(x){
     stop(msg2)
   }
 
-  return(invisible())
+  invisible()
 }
 
 checkArgs_df_list <- function(x){
   # Error messages
-  msg1 <- "'x' must be a XYZ list containing environmental map info (whether a matrix or an array). See help(detectFronts)."
+  msg1 <- "'x' must be a XYZ list containing environmental map info (whether a matrix or an array). See help(getGradients)."
 
   # Check if x is a list with 'x', 'y', 'z' dimensions, where z is a numeric matrix/array
   index <- (length(x) == 3 && all(is.element(c("x", "y", "z"), names(x))) && is.numeric(x$x) && is.numeric(x$y) &&
@@ -45,7 +45,7 @@ checkArgs_df_list <- function(x){
     stop(msg1)
   }
 
-  return(invisible())
+  invisible()
 }
 
 checkArgs_df_RasterLayer <- function(x){
@@ -53,7 +53,7 @@ checkArgs_df_RasterLayer <- function(x){
   if(nlayers(x) < 1){
     stop("RasterLayer object must have at least 1 layer.")
   }
-  return(invisible())
+  invisible()
 }
 
 checkArgs_df_SpatRaster <- function(x){
@@ -62,18 +62,20 @@ checkArgs_df_SpatRaster <- function(x){
     stop("SpatRaster object must have at least 1 layer.")
   }
 
-  return(invisible())
+  invisible()
 }
+
+simplifyChars <- function(x) tolower(gsub(x = x, pattern = "[[:punct:]]", replacement = ""))
 
 checkArgs_prevs <- function(allArgs, type){
 
   # Define parameters
-  method        <- allArgs$method
-  intermediate  <- allArgs$intermediate
+  method <- simplifyChars(allArgs$method)
+  intermediate <- allArgs$intermediate
   ConvolNormalization <- allArgs$ConvolNormalization
 
   # Check name of method
-  methodList <- c("BelkinOReilly2009", "median_filter")
+  methodList <- c("belkinoreilly2009", "medianfilter", "agenbag20031", "agenbag20032")
   if(!is.element(method, methodList)){
     stop("No valid method for gradient calculation.")
   }
@@ -88,5 +90,5 @@ checkArgs_prevs <- function(allArgs, type){
     stop("'ConvolNormalization' must be a single logical value.")
   }
 
-  return(invisible())
+  invisible()
 }
