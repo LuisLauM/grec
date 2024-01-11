@@ -1,7 +1,7 @@
 grec
 =======
 
-[![packageversion](https://img.shields.io/badge/Package%20version-1.4.1-orange.svg?style=flat-square)](commits/master) [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/grec)](https://cran.r-project.org/package=grec) [![CRAN_time_from_release](https://www.r-pkg.org/badges/ago/grec)](https://cran.r-project.org/package=grec) [![metacran downloads](https://cranlogs.r-pkg.org/badges/grec)](https://cran.r-project.org/package=grec) [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/grec)](https://cran.r-project.org/package=grec) [![CRAN_time_from_release](https://www.r-pkg.org/badges/ago/grec)](https://cran.r-project.org/package=grec) [![metacran downloads](https://cranlogs.r-pkg.org/badges/grec)](https://cran.r-project.org/package=grec) [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.2.0-6666ff.svg)](https://cran.r-project.org/)
 
 **[G]radient-based [REC]ognition of Spatial Patterns in Environmental Data**
 
@@ -64,12 +64,12 @@ mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.9
 
 ## Versions
 
-## 1.6.0
+### 1.6.0
   - We are changing the name of the `detectFronts` function to `getGradients`. However, for backwards compatibility, `detectFronts` will still be available until v2.0.0.
   - Adding new methods for `getGradients`: Agenbag-1 and Agenbag-2.
   - Some minor improvements in documentation and code.
 
-## 1.5.0
+### 1.5.0
   - Compatibility with **imagine >= 2.0.0**.
   - New method for SpatRast objects (from terra package).
   - Improvements on all methods.
