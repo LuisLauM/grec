@@ -1,7 +1,7 @@
-#' @rdname detectFronts
-#' @method detectFronts SpatRaster
+#' @rdname getGradients
+#' @method getGradients SpatRaster
 #' @export
-detectFronts.SpatRaster <- function(x, method = "BelkinOReilly2009",
+getGradients.SpatRaster <- function(x, method = "BelkinOReilly2009",
                                     intermediate = FALSE, ...){
 
   checkArgs_df_SpatRaster(x = x)
@@ -16,7 +16,7 @@ detectFronts.SpatRaster <- function(x, method = "BelkinOReilly2009",
     y <- abind(y, along = 3)
   }
 
-  y <- rast(x = detectFronts(x = y,
+  y <- rast(x = getGradients(x = y,
                              method = method,
                              intermediate = FALSE,
                              checkPrevs = FALSE, ...),

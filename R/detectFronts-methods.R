@@ -1,20 +1,29 @@
 
-#' @rdname detectFronts
+#' @rdname getGradients
 #' @export
-detectFronts.default <- function(x, method = "BelkinOReilly2009",
+getGradients.default <- function(x, method = "BelkinOReilly2009",
                                  intermediate = FALSE,
                                  ConvolNormalization = FALSE, ...){
 
   # Decide the method
-  switch(method,
-         BelkinOReilly2009 = df_BOR(a = x,
+  switch(simplifyChars(x = method),
+         belkinoreilly2009 = df_BOR(a = x,
                                     intermediate = intermediate,
                                     ConvNorm = ConvolNormalization,
                                     ...),
-         median_filter = df_MF(x = x,
+         medianfilter = df_MF(x = x,
                                intermediate = intermediate,
                                ConvNorm = ConvolNormalization,
-                               ...))
+                               ...),
+         agenbag20031 = df_Agenbag(x = x,
+                                   intermediate = intermediate,
+                                   ConvNorm = ConvolNormalization,
+                                   algorithm = 1,
+                                   ...),
+         agenbag20032 = df_Agenbag(x = x,
+                                   intermediate = intermediate,
+                                   algorithm = 2,
+                                   ...))
 }
 
 # Names of objects in this function follows the description of the algorithm in
@@ -107,5 +116,19 @@ df_MF <- function(x, intermediate, ConvNorm, ...){
          gradient_direction = atan(filteredH/filteredV))
   }else{
     newSobel
+  }
+}
+
+df_Agenbag <- function(x, intermediate, algorithm, ...){
+
+  # Apply a smooth (Median Filter)
+  gradientMat <- agenbagFilters(X = x, algorithm = algorithm)
+
+  # Return output
+  if(intermediate){
+    list(original           = x,
+         gradient_magnitude = gradientMat)
+  }else{
+    gradientMat
   }
 }

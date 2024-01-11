@@ -16,5 +16,6 @@ SST maps downloaded from ERDDAP for running examples with
 \code{grec} functions.
 }
 \references{
-ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
+ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap}
 }
+\keyword{datasets}
