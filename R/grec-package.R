@@ -6,13 +6,14 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom imagine contextualMF convolution2D medianFilter agenbagFilters
-#' @importFrom terra rast values nlyr crs ext varnames origin
-#' @importFrom raster raster values nlayers
-#' @importFrom utils modifyList
 #' @importFrom abind abind
-#' @importFrom lifecycle deprecate_soft deprecate_warn
-#' @importMethodsFrom terra as.matrix varnames<- origin<- ext<-
+#' @importFrom imagine contextualMF convolution2D medianFilter agenbagFilters
+#' @importFrom lifecycle deprecate_soft deprecate_warn badge
+#' @importFrom lifecycle deprecated
+#' @importFrom raster raster values nlayers
+#' @importFrom terra rast values nlyr crs ext varnames origin
+#' @importFrom utils modifyList
 #' @importMethodsFrom raster "["
+#' @importMethodsFrom terra as.matrix varnames<- origin<- ext<-
 ## usethis namespace: end
 NULL

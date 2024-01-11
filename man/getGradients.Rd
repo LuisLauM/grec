@@ -8,7 +8,6 @@
 \alias{getGradients.array}
 \alias{getGradients.default}
 \alias{getGradients}
-\alias{detectFronts}
 \alias{getGradients.list}
 \alias{getGradients.matrix}
 \title{Apply gradient-based methodologies to environmental data}
@@ -34,8 +33,6 @@ getGradients(
   ConvolNormalization = FALSE,
   ...
 )
-
-detectFronts(...)
 
 \method{getGradients}{list}(x, method = "BelkinOReilly2009", intermediate = FALSE, ...)
 
@@ -78,7 +75,7 @@ versions.
 
 (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
 supporting the use of \code{RasterLayer} in future versions. Instead,
-\pkg{grec} will be incorporating support for \link[terra]{SpatRaster-class},
+\pkg{grec} will be incorporating support for \link[terra:SpatRaster-class]{SpatRaster-class},
 a more recent and actively developed method for working with raster data.
 This change will take effect as soon as \pkg{raster} is removed from CRAN.
 
@@ -108,7 +105,6 @@ be specified as an array, \code{SpatRaster}, or \code{RasterLayer}* object.
 If \code{x} is an \code{array}, it must have three dimensions: longitude (lon),
 latitude (lat), and time. It is not mandatory to define the dimnames. The
 output will maintain all the attributes of the input data.
-
 
 \code{...} allows the (advanced) users to modify some aspects of filter
 application. Depending on the selected methodology, some parameters can be

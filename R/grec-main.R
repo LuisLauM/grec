@@ -1,48 +1,48 @@
 #' @title Default color palette most using on environmental representations.
-#' @description Vector with 2000 colors generated from \code{tim.colors} function.
+#' @description Vector with 2000 colors generated from `tim.colors` function.
 #' @docType data
 #' @usage colPalette
 #' @format A vector of 2000 colors in RGB format.
-#' @references \code{tim.colors} from \strong{fields} package
+#' @references `tim.colors` from **fields** package
 "colPalette"
 
 #' @title Sea Surface Temperature Data
 #' @description SST maps downloaded from ERDDAP for running examples with
-#' \code{grec} functions.
+#' `grec` functions.
 #' @docType data
 #' @usage sst
-#' @format A \code{list} with SST information from February to April of Aqua
+#' @format A `list` with SST information from February to April of Aqua
 #' MODIS source.
-#' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
+#' @references ERDDAP website: <https://coastwatch.pfeg.noaa.gov/erddap>
 "sst"
 
 #' @title Sea Surface Chlorophyll Data
 #' @description Surface chlorophyll maps downloaded from ERDDAP for running
-#' examples with \code{grec} functions.
+#' examples with `grec` functions.
 #' @docType data
 #' @usage chl
-#' @format A \code{list} with chlorophyll information from February to April of
+#' @format A `list` with chlorophyll information from February to April of
 #' Aqua MODIS source.
-#' @references ERDDAP website: \url{https://coastwatch.pfeg.noaa.gov/erddap/index.html}
+#' @references ERDDAP website: <https://coastwatch.pfeg.noaa.gov/erddap>
 "chl"
 
 #' @title Apply gradient-based methodologies to environmental data
 #'
 #' @description This function empowers users to analyze data from various sources,
-#' including numeric \code{matrix}, \code{array}s, XYZ-\code{list}s,
-#' \code{SpatRaster}s, or \code{RasterLayer}s*, by applying gradient-seeking
+#' including numeric `matrix`, `array`s, XYZ-`list`s,
+#' `SpatRaster`s, or `RasterLayer`s*, by applying gradient-seeking
 #' methodologies.
 #'
 #' @rdname getGradients
 #'
-#' @param x An object of class \code{matrix}, \code{array}, XYZ \code{list},
-#' \code{SpatRaster} or \code{RasterLayer}*. See 'Details.'
-#' @param method \code{character} string indicating the method that will be used.
+#' @param x An object of class `matrix`, `array`, XYZ `list`,
+#' `SpatRaster` or `RasterLayer`*. See 'Details.'
+#' @param method `character` string indicating the method that will be used.
 #' For the available methods, see 'Details'.
-#' @param intermediate \code{logical} indicating whether to get the intermediate
-#' matrices (\code{TRUE}) or just the final one (\code{FALSE}).
-#' @param ConvolNormalization \code{logical} indicating if convolutions will
-#' perform a previous normalization (\code{FALSE} by default). See Details.
+#' @param intermediate `logical` indicating whether to get the intermediate
+#' matrices (`TRUE`) or just the final one (`FALSE`).
+#' @param ConvolNormalization `logical` indicating if convolutions will
+#' perform a previous normalization (`FALSE` by default). See Details.
 #' @param ... Extra arguments that will depend on the selected method. See
 #' Details.
 #'
@@ -57,49 +57,49 @@
 #' versions.
 #'
 #' (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
-#' supporting the use of \code{RasterLayer} in future versions. Instead,
-#' \pkg{grec} will be incorporating support for \link[terra]{SpatRaster-class},
+#' supporting the use of `RasterLayer` in future versions. Instead,
+#' \pkg{grec} will be incorporating support for [SpatRaster-class][terra::SpatRaster-class],
 #' a more recent and actively developed method for working with raster data.
 #' This change will take effect as soon as \pkg{raster} is removed from CRAN.
 #'
-#' Until the current version, \code{grec} performs four methods:
+#' Until the current version, `grec` performs four methods:
 #' \enumerate{
-#' \item \code{BelkinOReilly2009} (default): Based on Belkin & O'Reilly (2009)
+#' \item `BelkinOReilly2009` (default): Based on Belkin & O'Reilly (2009)
 #' article, it uses a Contextual Median Filter (CMF) for smoothing the original
 #' data before the applying of Sobel filters.
-#' \item \code{median_filter}: it uses a typical median filter (MF) for
+#' \item `median_filter`: it uses a typical median filter (MF) for
 #' smoothing the original data. It also allows the user to change the window
 #' size for median filter (3 as default).
-#' \item \code{Agenbag2003-1}: Performs method 1 described on Agenbag et al.
+#' \item `Agenbag2003-1`: Performs method 1 described on Agenbag et al.
 #' (2003) paper, based on the equation:
 #' \deqn{SST_{grad}=\sqrt{(T_{i+1}-T_{i-1})^2 +(T_{j+1}-T_{j-1})^2}}
-#' \item \code{Agenbag2003-2}: Performs method 2 described on Agenbag et al.
+#' \item `Agenbag2003-2`: Performs method 2 described on Agenbag et al.
 #' (2003) paper, calculating the the standard deviation of the 3x3 neighbor area
 #' for each pixel.
 #' }
 #'
-#' The input data \code{x} can be represented in various formats to accommodate
-#' different data sources. It can be provided as a single numeric \code{matrix}
+#' The input data `x` can be represented in various formats to accommodate
+#' different data sources. It can be provided as a single numeric `matrix`
 #' extracted from an environmental map. Alternatively, it can be represented as
-#' a three-dimensional XYZ \code{list}, where \code{X} contains a vector of
-#' longitudes, \code{Y} contains a vector of latitudes, and \code{Z} is a matrix
-#' of dimensions \code{length(x$X)} x \code{length(x$Y)}. Additionally, it can
-#' be specified as an array, \code{SpatRaster}, or \code{RasterLayer}* object.
-#' If \code{x} is an \code{array}, it must have three dimensions: longitude (lon),
+#' a three-dimensional XYZ `list`, where `X` contains a vector of
+#' longitudes, `Y` contains a vector of latitudes, and `Z` is a matrix
+#' of dimensions `length(x$X)` x `length(x$Y)`. Additionally, it can
+#' be specified as an array, `SpatRaster`, or `RasterLayer`* object.
+#' If `x` is an `array`, it must have three dimensions: longitude (lon),
 #' latitude (lat), and time. It is not mandatory to define the dimnames. The
 #' output will maintain all the attributes of the input data.
 #'
 #'
-#' \code{...} allows the (advanced) users to modify some aspects of filter
+#' `...` allows the (advanced) users to modify some aspects of filter
 #' application. Depending on the selected methodology, some parameters can be
 #' modified:
 #'
 #' \describe{
-#' \item{\strong{times}}{\code{numeric}. How many times do you want to apply
+#' \item{**times**}{`numeric`. How many times do you want to apply
 #' the filtering method?}
-#' \item{\strong{kernelValues}}{A \code{numeric} vector that will be used for
+#' \item{**kernelValues**}{A `numeric` vector that will be used for
 #' convolution to detect vertical and horizontal gradients.}
-#' \item{\strong{radius}}{\code{numeric}. If \strong{median-filter} method was
+#' \item{**radius**}{`numeric`. If **median-filter** method was
 #' selected, it allows to change the window size of the filter.}
 #' }
 #'
@@ -108,7 +108,7 @@
 #' the convolution output by the absolute value of the kernel. While
 #' normalization is recommended to ensure consistent interpretation of results,
 #' it is disabled by default and can be enabled by setting the
-#' \code{ConvolNormalization} parameter to \code{TRUE}.
+#' `ConvolNormalization` parameter to `TRUE`.
 #'
 #' Finally, Belkin & O'Reilly's work suggests applying a logarithmic
 #' transformation to the gradient output. This step is not enabled by default,
@@ -181,8 +181,24 @@ getGradients <- function(x,
   UseMethod(generic = "getGradients", object = x)
 }
 
+#' @title Apply gradient-based methodologies to environmental data
+#'
+#' @param ... Same arguments than \link[grec]{getGradients}.
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function empowers users to analyze data from various sources,
+#' including numeric `matrix`, `array`s, XYZ-`list`s,
+#' `SpatRaster`s, or `RasterLayer`s*, by applying gradient-seeking
+#' methodologies.
+#'
+#' @details
+#' Since version 1.6.0, this function has been entirely replaced by
+#' \link[grec]{getGradients}. As of version 2.0.0, `detectFronts` will no longer
+#' be available.
+#'
 #' @export
-#' @rdname getGradients
 detectFronts <- function(...){
 
   deprecate_soft(when = "1.6.0", what = "detectFronts()", with = "getGradients()")
