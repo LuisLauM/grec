@@ -1,3 +1,6 @@
+## 1.6.1
+  - No changes. Just to resubmit to CRAN.
+
 ## 1.6.0
   - We are changing the name of the `detectFronts` function to `getGradients`. However, for backwards compatibility, `detectFronts` will still be available until v2.0.0.
   - Adding new methods for `getGradients`: *Agenbag-1* and *Agenbag-2*.

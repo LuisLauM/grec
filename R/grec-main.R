@@ -58,9 +58,10 @@
 #'
 #' (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
 #' supporting the use of `RasterLayer` in future versions. Instead,
-#' \pkg{grec} will be incorporating support for [SpatRaster-class][terra::SpatRaster-class],
-#' a more recent and actively developed method for working with raster data.
-#' This change will take effect as soon as \pkg{raster} is removed from CRAN.
+#' \pkg{grec} will be incorporating support for
+#' [SpatRaster-class][terra::SpatRaster-class], a more recent and actively developed
+#' method for working with raster data. This change will take effect as soon as
+#' \pkg{raster} is removed from CRAN.
 #'
 #' Until the current version, `grec` performs four methods:
 #' \enumerate{
@@ -115,6 +116,11 @@
 #' as it is primarily intended for chlorophyll data. Users are free to apply the
 #' transformation manually if it suits their specific needs.
 #'
+#' @returns
+#' The output class will depend on the input (\code{x} argument). For further
+#' details about the format structure, you can check the specific documentation
+#' for
+#'
 #'
 #' @references
 #' Belkin, I. M., & O'Reilly, J. E. (2009). An algorithm for oceanic
@@ -126,8 +132,6 @@
 #' Pelagic Fish Species Using Catch Size- and Remote Sensing Data". Progress in
 #' Oceanography 59, No 2-3 (October 2003): 275-300.
 #' (\doi{https://doi.org/10.1016/j.pocean.2003.07.004}).
-#'
-#' @return The output will preserve the input class.
 #'
 #' @export
 #'
