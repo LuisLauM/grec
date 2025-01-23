@@ -55,7 +55,10 @@ Details.}
 perform a previous normalization (\code{FALSE} by default). See Details.}
 }
 \value{
-The output will preserve the input class.
+The output class will depend on the input (i.e. the \code{x} argument). For
+further details about structure of \code{SpatRaster} or \code{RasterLayer}, you can
+check the specific documentation in \link[terra:SpatRaster-class]{terra} and
+\link[raster:raster]{raster} respectively.
 }
 \description{
 This function empowers users to analyze data from various sources,
@@ -75,9 +78,10 @@ versions.
 
 (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
 supporting the use of \code{RasterLayer} in future versions. Instead,
-\pkg{grec} will be incorporating support for \link[terra:SpatRaster-class]{SpatRaster-class},
-a more recent and actively developed method for working with raster data.
-This change will take effect as soon as \pkg{raster} is removed from CRAN.
+\pkg{grec} will be incorporating support for
+\link[terra:SpatRaster-class]{SpatRaster-class}, a more recent and actively developed
+method for working with raster data. This change will take effect as soon as
+\pkg{raster} is removed from CRAN.
 
 Until the current version, \code{grec} performs four methods:
 \enumerate{
@@ -149,6 +153,8 @@ out_chl <- getGradients(x = exampleChlData)
 # External transformation for chl data
 out_chl$z <- log10(out_chl$z)
 
+oldPar <- par(no.readonly = FALSE)
+
 par(mfrow = c(2, 2), mar = rep(0, 4), oma = rep(0, 4))
 
 image(exampleSSTData, col = colPalette, axes = FALSE)
@@ -163,6 +169,8 @@ mtext(text = "Original Chlorophyll", side = 3, line = -2, adj = 0.99, cex = 1.2)
 image(out_chl, col = colPalette, axes = FALSE)
 mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.99,
       cex = 1.2)
+
+par(oldPar)
 }
 \references{
 Belkin, I. M., & O'Reilly, J. E. (2009). An algorithm for oceanic

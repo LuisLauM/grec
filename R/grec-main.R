@@ -59,7 +59,7 @@
 #' (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
 #' supporting the use of `RasterLayer` in future versions. Instead,
 #' \pkg{grec} will be incorporating support for
-#' [SpatRaster-class][terra::SpatRaster-class], a more recent and actively developed
+#' [SpatRaster-class][terra::SpatRaster], a more recent and actively developed
 #' method for working with raster data. This change will take effect as soon as
 #' \pkg{raster} is removed from CRAN.
 #'
@@ -117,9 +117,10 @@
 #' transformation manually if it suits their specific needs.
 #'
 #' @returns
-#' The output class will depend on the input (\code{x} argument). For further
-#' details about the format structure, you can check the specific documentation
-#' for
+#' The output class will depend on the input (i.e. the \code{x} argument). For
+#' further details about structure of `SpatRaster` or `RasterLayer`, you can
+#' check the specific documentation in [terra][terra::SpatRaster] and
+#' [raster][raster::raster] respectively.
 #'
 #'
 #' @references
@@ -153,6 +154,8 @@
 #' # External transformation for chl data
 #' out_chl$z <- log10(out_chl$z)
 #'
+#' oldPar <- par(no.readonly = FALSE)
+#'
 #' par(mfrow = c(2, 2), mar = rep(0, 4), oma = rep(0, 4))
 #'
 #' image(exampleSSTData, col = colPalette, axes = FALSE)
@@ -167,6 +170,8 @@
 #' image(out_chl, col = colPalette, axes = FALSE)
 #' mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.99,
 #'       cex = 1.2)
+#'
+#' par(oldPar)
 getGradients <- function(x,
                          method = c("BelkinOReilly2009", "median_filter",
                                     "Agenbag2003-1", "Agenbag2003-2"),
