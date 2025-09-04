@@ -58,10 +58,10 @@
 #'
 #' (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
 #' supporting the use of `RasterLayer` in future versions. Instead,
-#' \pkg{grec} will be incorporating support for
-#' [SpatRaster-class][terra::SpatRaster], a more recent and actively developed
-#' method for working with raster data. This change will take effect as soon as
-#' \pkg{raster} is removed from CRAN.
+#' we encourage the use of [SpatRaster-class][terra::SpatRaster] (from the
+#' \pkg{terra} package), a more recent and actively developed method for working
+#' with raster data. This change will take effect as soon as \pkg{raster} is
+#' removed from CRAN.
 #'
 #' Until the current version, `grec` performs four methods:
 #' \enumerate{

@@ -11,7 +11,7 @@
 #' @importFrom lifecycle deprecate_soft deprecate_warn badge
 #' @importFrom lifecycle deprecated
 #' @importFrom raster raster values nlayers
-#' @importFrom terra rast values nlyr crs ext varnames origin
+#' @importFrom terra rast values nlyr crs ext varnames origin 'values<-'
 #' @importFrom utils modifyList
 #' @importMethodsFrom raster "["
 #' @importMethodsFrom terra as.matrix varnames<- origin<- ext<-

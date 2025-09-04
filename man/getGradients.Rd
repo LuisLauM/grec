@@ -78,10 +78,10 @@ versions.
 
 (*) Due to the deprecation of the \pkg{raster} package, \pkg{grec} will not be
 supporting the use of \code{RasterLayer} in future versions. Instead,
-\pkg{grec} will be incorporating support for
-\link[terra:SpatRaster-class]{SpatRaster-class}, a more recent and actively developed
-method for working with raster data. This change will take effect as soon as
-\pkg{raster} is removed from CRAN.
+we encourage the use of \link[terra:SpatRaster-class]{SpatRaster-class} (from the
+\pkg{terra} package), a more recent and actively developed method for working
+with raster data. This change will take effect as soon as \pkg{raster} is
+removed from CRAN.
 
 Until the current version, \code{grec} performs four methods:
 \enumerate{
