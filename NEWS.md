@@ -1,3 +1,9 @@
+## 1.6.2
+  - Improvements on `getGradients` method for `SpatRaster` class inputs.
+
+## 1.6.1
+  - Minor corrections on documentation and demo files.
+
 ## 1.6.0
   - We are changing the name of the `detectFronts` function to `getGradients`. However, for backwards compatibility, `detectFronts` will still be available until v2.0.0.
   - Adding new methods for `getGradients`: *Agenbag-1* and *Agenbag-2*.

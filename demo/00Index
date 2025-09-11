@@ -1,1 +1,1 @@
-detectFronts                 Read Chlorophyll-a map from example data, apply detectFronts function and plot results.
+getGradients                 Read Chlorophyll-a map from example data, apply detectFronts function and plot results.
