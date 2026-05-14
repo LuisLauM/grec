@@ -7,15 +7,20 @@ getGradients.array <- function(x, method = "BelkinOReilly2009",
   # Check arguments
   checkArgs_df_array(x = x)
 
-  output <- lapply(X = seq(dim(x)[3]),
-                   FUN = function(i, ...) getGradients(x = x[,,i], ...),
-                   method = method, intermediate = intermediate,
-                   checkPrevs = FALSE, ...)
+  output <- lapply(
+    X = seq(dim(x)[3]),
+    FUN = \(i, ...) getGradients(x = x[,,i], ...),
+    method = method, intermediate = intermediate,
+    checkPrevs = FALSE, ...
+  )
 
   if(isTRUE(intermediate)){
     index <- names(output[[1]])
-    output <- lapply(X = seq_along(index),
-                     FUN = function(x) abind(lapply(output, "[[", x), along = 3))
+
+    output <- lapply(
+      X = seq_along(index),
+      FUN = \(x) lapply(output, "[[", x) |> abind(along = 3)
+    )
 
     names(output) <- index
   }else{

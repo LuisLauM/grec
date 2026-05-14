@@ -6,12 +6,17 @@ getGradients.SpatRaster <- function(x, method = "BelkinOReilly2009",
 
   checkArgs_df_SpatRaster(x = x)
 
-  out <- apply(X = as.array(x = x), MARGIN = 3, FUN = getGradients,
-               method = method, intermediate = FALSE, checkPrevs = FALSE,
-               simplify = FALSE)
+  out <- apply(
+    X = as.array(x = x),
+    MARGIN = 3,
+    FUN = getGradients,
+    method = method,
+    intermediate = FALSE,
+    checkPrevs = FALSE,
+    simplify = FALSE
+  ) |>
 
-  out <- lapply(X = out, FUN = t)
-  out <- lapply(X = out, FUN = as.numeric)
+    lapply(FUN = t) |> lapply(FUN = as.numeric)
 
   values(x) <- do.call(args = out, what = c)
   varnames(x) <- sprintf("gradient of %s", varnames(x))

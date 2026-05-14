@@ -19,7 +19,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Wencheng Lau-Medrano \email{luis.laum@gmail.com}
+\strong{Maintainer}: Wencheng Lau-Medrano \email{luis.laum@protonmail.com} (\href{https://orcid.org/0000-0002-7979-9710}{ORCID})
+
+Authors:
+\itemize{
+  \item Wencheng Lau-Medrano \email{luis.laum@protonmail.com} (\href{https://orcid.org/0000-0002-7979-9710}{ORCID})
+}
 
 }
 \keyword{internal}

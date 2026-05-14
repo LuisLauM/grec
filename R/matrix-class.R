@@ -8,8 +8,12 @@ getGradients.matrix <- function(x, method = "BelkinOReilly2009",
   checkArgs_df_matrix(x = x)
 
   # Apply method
-  output <- getGradients.default(x = x, method = method,
-                                 intermediate = intermediate, ...)
+  output <- getGradients.default(
+    x = x,
+    method = method,
+    intermediate = intermediate,
+    ...
+  )
 
   dimnames(output) <- dimnames(x)
 

@@ -64,6 +64,10 @@ mtext(text = "Chlorophyll gradient\n(log scale)", side = 3, line = -4, adj = 0.9
 
 ## Versions
 
+### 1.6.4
+  - Correction on `getGradients` method for `SpatRaster` class inputs.
+  - Now grec works with [cli](https://cli.r-lib.org/) messages.
+
 ### 1.6.2
   - Improvements on `getGradients` method for `SpatRaster` class inputs.
 
